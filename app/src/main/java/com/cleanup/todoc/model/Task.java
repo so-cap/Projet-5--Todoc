@@ -2,6 +2,9 @@ package com.cleanup.todoc.model;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.PrimaryKey;
 
 import java.util.Comparator;
 
@@ -9,17 +12,32 @@ import java.util.Comparator;
  * <p>Model for the tasks of the application.</p>
  *
  * @author Gaëtan HERFRAY
+ * <p>
+ * Changes 21/02/2020
+ * @author Sophie
  */
+
+@Entity(foreignKeys = {
+        @ForeignKey(entity = Project.class,
+        parentColumns = "id",
+        childColumns = "projectId"),
+
+        @ForeignKey(entity = Employee.class,
+        parentColumns = "id",
+        childColumns = "employeeId")})
 public class Task {
     /**
      * The unique identifier of the task
      */
+    @PrimaryKey
     private long id;
 
     /**
      * The unique identifier of the project associated to the task
+     * and the identifier of the employee logged in.
      */
     private long projectId;
+    private int employeeId;
 
     /**
      * The name of the task
@@ -39,12 +57,14 @@ public class Task {
      *
      * @param id                the unique identifier of the task to set
      * @param projectId         the unique identifier of the project associated to the task to set
+     * @param employeeId        the unique identifier of the employee associated to the project
      * @param name              the name of the task to set
      * @param creationTimestamp the timestamp when the task has been created to set
      */
-    public Task(long id, long projectId, @NonNull String name, long creationTimestamp) {
+    public Task(long id, long projectId, int employeeId,@NonNull String name, long creationTimestamp) {
         this.setId(id);
         this.setProjectId(projectId);
+        this.setEmployeeId(employeeId);
         this.setName(name);
         this.setCreationTimestamp(creationTimestamp);
     }
@@ -76,14 +96,19 @@ public class Task {
         this.projectId = projectId;
     }
 
+
+    private void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
+    }
+
     /**
      * Returns the project associated to the task.
      *
      * @return the project associated to the task
      */
     @Nullable
-    public Project getProject() {
-        return Project.getProjectById(projectId);
+    public Project getProject(ProjectDao projectDao) {
+        return projectDao (projectId);
     }
 
     /**
