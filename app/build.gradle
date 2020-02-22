@@ -27,13 +27,6 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
-
-    /* TO SUPPORT LAMBDAS
-    compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
-    }
-     */
 }
 
 dependencies {
