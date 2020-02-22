@@ -20,11 +20,12 @@ android {
         disable 'RestrictedApi'
     }
 
-    // TO SUPPORT LAMBDAS
+    /* TO SUPPORT LAMBDAS
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+     */
 }
 
 dependencies {

@@ -2,6 +2,7 @@ package com.cleanup.todoc.database.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Insert;
 import androidx.room.Query;
 
 import com.cleanup.todoc.model.Project;
@@ -14,13 +15,17 @@ import java.util.List;
  */
 @Dao
 public interface ProjectDao {
-    @Query("SELECT * FROM Project WHERE id = :projectId AND employeeId = :employeeId ")
-    LiveData<Project> getProject(int projectId, int employeeId);
+    @Query("SELECT * FROM Project WHERE id = :projectId")
+    LiveData<Project> getProject(long projectId);
 
-    @Query("SELECT * FROM Project WHERE employeeId = :employeeId ")
-    LiveData<List<Project>> getAllProjects(int employeeId);
+  /*  @Query("SELECT * FROM Project")
+    LiveData<List<Project>> getAllProjects();
 
-    @Query("SELECT * FROM Project WHERE id = :projectId AND employeeId = :employeeId")
+    @Query("SELECT * FROM Task WHERE projectId = :projectId AND employeeId = :employeeId")
     LiveData<List<Task>> getTasksByProject(long projectId, int employeeId);
 
+    @Insert
+    void insertProject(Project project);
+
+   */
 }

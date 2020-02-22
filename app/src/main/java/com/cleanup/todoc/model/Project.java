@@ -17,7 +17,6 @@ public class Project {
      * The unique identifier of the project
      */
     private final long id;
-    private final int employeeId;
 
     /**
      * The name of the project
@@ -38,9 +37,8 @@ public class Project {
      * @param name  the name of the project to set
      * @param color the hex (ARGB) code of the color associated to the project to set
      */
-    private Project(long id, int employeeId, @NonNull String name, @ColorInt int color) {
+    public Project(long id, @NonNull String name, @ColorInt int color) {
         this.id = id;
-        this.employeeId = employeeId;
         this.name = name;
         this.color = color;
     }
@@ -50,16 +48,15 @@ public class Project {
      *
      * @return all the projects of the application
      */
-   /* @NonNull
+
+    @NonNull
     public static Project[] getAllProjects() {
         return new Project[]{
-                new Project(1L, employeeId, "Projet Tartampion", 0xFFEADAD1),
-                new Project(2L, employeeId, "Projet Lucidia", 0xFFB4CDBA),
-                new Project(3L, employeeId, "Projet Circus", 0xFFA3CED2),
+                new Project(1L, "Projet Tartampion", 0xFFEADAD1),
+                new Project(2L, "Projet Lucidia", 0xFFB4CDBA),
+                new Project(3L, "Projet Circus", 0xFFA3CED2),
         };
     }
-
-    */
 
     /**
      * Returns the project with the given unique identifier, or null if no project with that

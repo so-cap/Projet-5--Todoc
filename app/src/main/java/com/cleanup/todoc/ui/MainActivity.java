@@ -2,12 +2,16 @@ package com.cleanup.todoc.ui;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +22,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cleanup.todoc.R;
+import com.cleanup.todoc.TaskViewModel;
+import com.cleanup.todoc.ViewModelFactory;
+import com.cleanup.todoc.injection.Injection;
+import com.cleanup.todoc.model.Employee;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
@@ -32,6 +40,10 @@ import java.util.Date;
  * @author Gaëtan HERFRAY
  */
 public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
+    private TaskViewModel taskViewModel;
+    private LiveData<Employee> currentEmployee;
+    private static final int dummyEmployeeId = 1;
+
     /**
      * List of all projects available in the application
      */
@@ -94,8 +106,12 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         setContentView(R.layout.activity_main);
 
+        configureViewModel();
+        loginEmployee();
+
         listTasks = findViewById(R.id.list_tasks);
         lblNoTasks = findViewById(R.id.lbl_no_task);
+
 
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listTasks.setAdapter(adapter);
@@ -106,6 +122,19 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 showAddTaskDialog();
             }
         });
+
+    }
+
+    private void loginEmployee() {
+        //int employeeId = findViewById(R.id.)
+        currentEmployee = taskViewModel.getEmployee(dummyEmployeeId);
+    }
+
+    // TODO : mieux comprendre le fonctionnement du ViewModelFactory
+    private void configureViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
+        taskViewModel = new ViewModelProvider(this, viewModelFactory).get(TaskViewModel.class);
+        taskViewModel.initEmployee(currentEmployee);
     }
 
     @Override
@@ -119,6 +148,17 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         int id = item.getItemId();
 
         if (id == R.id.filter_alphabetical) {
+            taskViewModel.sortAZOrder();
+        } else if (id == R.id.filter_alphabetical_inverted) {
+            taskViewModel.sortZAOrder();
+        } else if (id == R.id.filter_oldest_first) {
+            taskViewModel.sortByLessRecent();
+        } else if (id == R.id.filter_recent_first) {
+            taskViewModel.sortByMostRecent();
+        }
+
+       /*
+        if (id == R.id.filter_alphabetical) {
             sortMethod = SortMethod.ALPHABETICAL;
         } else if (id == R.id.filter_alphabetical_inverted) {
             sortMethod = SortMethod.ALPHABETICAL_INVERTED;
@@ -129,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         }
 
         updateTasks();
-
+        */
         return super.onOptionsItemSelected(item);
     }
 
@@ -163,22 +203,33 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             // If both project and name of the task have been set
             else if (taskProject != null) {
                 // TODO: Replace this by id of persisted task
-                long id = (long) (Math.random() * 50000);
+              /*  long id = (long) (Math.random() * 50000);
 
 
                 Task task = new Task(
                         id,
                         taskProject.getId(),
+                        currentEmployee.getId(),
                         taskName,
                         new Date().getTime()
                 );
+               */
 
-                addTask(task);
+                if (currentEmployee.getValue() != null) {
+                    Task task = new Task(
+                            taskProject.getId(),
+                            currentEmployee.getValue().getId(),
+                            taskName,
+                            new Date().getTime()
+                    );
+                    addTask(task);
+                }
+
 
                 dialogInterface.dismiss();
             }
             // If name has been set, but project has not been set (this should never occur)
-            else{
+            else {
                 dialogInterface.dismiss();
             }
         }
@@ -320,4 +371,5 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
          */
         NONE
     }
+
 }

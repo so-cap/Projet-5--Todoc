@@ -33,10 +33,16 @@ public interface TaskDao {
     @Query("SELECT * FROM Task WHERE employeeId = :employeeId")
     LiveData<List<Task>> getTasks(int employeeId);
 
+    @Query("SELECT * FROM Task WHERE employeeId = :employeeId ORDER BY creationTimestamp DESC")
+    LiveData<List<Task>> getTasksByMostRecentOrder(int employeeId);
+
     @Query("SELECT * FROM Task WHERE employeeId = :employeeId ORDER BY creationTimestamp ASC")
+    LiveData<List<Task>> getTasksByLessRecentOrder(int employeeId);
+
+    @Query("SELECT * FROM Task WHERE employeeId = :employeeId ORDER BY name ASC")
     LiveData<List<Task>> getTasksByAscendingOrder(int employeeId);
 
-    @Query("SELECT * FROM Task WHERE employeeId = :employeeId ORDER BY creationTimestamp DESC")
+    @Query("SELECT * FROM Task WHERE employeeId = :employeeId ORDER BY name DESC")
     LiveData<List<Task>> getTasksByDescendingOrder(int employeeId);
 
 }

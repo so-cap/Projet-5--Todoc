@@ -2,9 +2,12 @@ package com.cleanup.todoc.model;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
+
+import com.cleanup.todoc.database.dao.ProjectDao;
 
 import java.util.Comparator;
 
@@ -69,6 +72,13 @@ public class Task {
         this.setCreationTimestamp(creationTimestamp);
     }
 
+    public Task(long projectId, int employeeId,@NonNull String name, long creationTimestamp) {
+        this.setProjectId(projectId);
+        this.setEmployeeId(employeeId);
+        this.setName(name);
+        this.setCreationTimestamp(creationTimestamp);
+    }
+
     /**
      * Returns the unique identifier of the task.
      *
@@ -107,8 +117,8 @@ public class Task {
      * @return the project associated to the task
      */
     @Nullable
-    public Project getProject(ProjectDao projectDao) {
-        return projectDao (projectId);
+    public LiveData<Project> getProject(ProjectDao projectDao) {
+        return projectDao.getProject(projectId);
     }
 
     /**
