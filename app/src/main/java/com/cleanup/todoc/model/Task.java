@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.cleanup.todoc.database.dao.ProjectDao;
@@ -23,7 +24,8 @@ import java.util.Comparator;
 @Entity(foreignKeys = {
         @ForeignKey(entity = Project.class,
         parentColumns = "id",
-        childColumns = "projectId")})
+        childColumns = "projectId")}
+        , indices = @Index("projectId"))
 public class Task {
     /**
      * The unique identifier of the task
@@ -103,8 +105,8 @@ public class Task {
      * @return the project associated to the task
      */
     @Nullable
-    public LiveData<Project> getProject(ProjectDao projectDao) {
-        return projectDao.getProject(projectId);
+    public Project getProject(long projectId) {
+        return Project.getProjectById(projectId);
     }
 
     /**

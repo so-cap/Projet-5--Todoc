@@ -77,6 +77,10 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         return tasks.size();
     }
 
+    public void setTasks(List<Task> tasks){
+        this.tasks = tasks;
+    }
+
     /**
      * Listener for deleting tasks
      */
@@ -157,13 +161,10 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             lblTaskName.setText(task.getName());
             imgDelete.setTag(task);
 
-            ProjectDao projectDao = TodocDatabase.getInstance(itemView.getContext()).projectDao();
-            final LiveData<Project> taskProject = task.getProject(projectDao);
+            final Project taskProject = task.getProject(task.getProjectId());
             if (taskProject != null) {
-                if (taskProject.getValue() != null) {
-                    imgProject.setSupportImageTintList(ColorStateList.valueOf(taskProject.getValue().getColor()));
-                    lblProjectName.setText(taskProject.getValue().getName());
-                }
+                    imgProject.setSupportImageTintList(ColorStateList.valueOf(taskProject.getColor()));
+                    lblProjectName.setText(taskProject.getName());
             } else {
                 imgProject.setVisibility(View.INVISIBLE);
                 lblProjectName.setText("");

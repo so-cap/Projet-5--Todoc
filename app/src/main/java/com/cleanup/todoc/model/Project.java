@@ -2,7 +2,7 @@ package com.cleanup.todoc.model;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -58,6 +58,14 @@ public class Project {
                 new Project(2L, "Projet Lucidia", 0xFFB4CDBA),
                 new Project(3L, "Projet Circus", 0xFFA3CED2),
         };
+    }
+
+    public static Project getProjectById(long id) {
+        for(int i = 0; i < 3; i++){
+            if (getAllProjects()[i].getId() == id)
+                return getAllProjects()[i];
+        }
+        return null;
     }
 
     /**

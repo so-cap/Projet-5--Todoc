@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -65,10 +66,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     @NonNull
     private SortMethod sortMethod = SortMethod.NONE;
 
-
-    @Nullable
-    public AlertDialog.Builder alertBuilder;
-
     /**
      * Dialog to create a new task
      */
@@ -111,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         this.deleteDatabase("TodocDatabase.db");
         configureViewModel();
-        alertBuilder = new AlertDialog.Builder(this, R.style.Dialog);
 
 
         listTasks = findViewById(R.id.list_tasks);
@@ -121,7 +117,12 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listTasks.setAdapter(adapter);
 
-        taskViewModel.getTasks().observe(this, this::updateTasksList);
+        taskViewModel.getTasks().observe(this, new Observer<List<Task>>() {
+            @Override
+            public void onChanged(List<Task> tasks) {
+                adapter.updateTasks(tasks);
+            }
+        });
 
         findViewById(R.id.fab_add_task).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,11 +134,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     }
 
     private static final String TAG = "MainActivity";
-
-    private void updateTasksList(List<Task> tasks) {
-        adapter.updateTasks(tasks);
-        Log.d(TAG, "updateTasksList: 1");
-    }
 
     // TODO : mieux comprendre le fonctionnement du ViewModelFactory
     private void configureViewModel() {
@@ -203,17 +199,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             // If both project and name of the task have been set
             else if (taskProject != null) {
                 // TODO: Replace this by id of persisted task
-              /*  long id = (long) (Math.random() * 50000);
-
-
-                Task task = new Task(
-                        id,
-                        taskProject.getId(),
-                        currentEmployee.getId(),
-                        taskName,
-                        new Date().getTime()
-                );
-               */
 
                 Task task = new Task(0,
                         taskProject.getId(),
@@ -257,9 +242,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      */
     private void addTask(@NonNull Task task) {
         taskViewModel.createTask(task);
-
-        //tasks.add(task);
-        //updateTasks();
+        lblNoTasks.setVisibility(View.GONE);
+        listTasks.setVisibility(View.VISIBLE);
     }
 
     /*
@@ -274,16 +258,38 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             listTasks.setVisibility(View.VISIBLE);
             switch (sortMethod) {
                 case ALPHABETICAL:
-                    updateTasksList(taskViewModel.tasksInAZOrder().getValue());
+                    taskViewModel.tasksInAZOrder().observe(this, new Observer<List<Task>>() {
+                        @Override
+                        public void onChanged(List<Task> tasks) {
+                            adapter.updateTasks(tasks);
+                        }
+                    });
                     break;
                 case ALPHABETICAL_INVERTED:
-                  taskViewModel.tasksInZAOrder().observe(this,this::updateTasksList);
+                    taskViewModel.tasksInZAOrder().observe(this, new Observer<List<Task>>() {
+                        @Override
+                        public void onChanged(List<Task> tasks) {
+                            adapter.updateTasks(tasks);
+                        }
+                    });
                     break;
                 case RECENT_FIRST:
-                    taskViewModel.tasksByMostRecent().observe(this,this::updateTasksList);
+                    taskViewModel.tasksByMostRecent().observe(this, new Observer<List<Task>>() {
+                        @Override
+                        public void onChanged(List<Task> tasks) {
+                            adapter.updateTasks(tasks);
+                        }
+                    });
                     break;
                 case OLD_FIRST:
-                    taskViewModel.tasksByLessRecent().observe(this,this::updateTasksList);
+                    taskViewModel.tasksByLessRecent().observe(this, new Observer<List<Task>>() {
+                        @Override
+                        public void onChanged(List<Task> tasks) {
+                            adapter.updateTasks(tasks);
+                        }
+                    });
+                    break;
+                case NONE:
                     break;
 
             }
@@ -297,6 +303,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      */
     @NonNull
     private AlertDialog getAddTaskDialog() {
+        final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this, R.style.Dialog);
         alertBuilder.setTitle(R.string.add_task);
         alertBuilder.setView(R.layout.dialog_add_task);
         alertBuilder.setPositiveButton(R.string.add, null);
