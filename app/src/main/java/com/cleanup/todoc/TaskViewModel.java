@@ -3,14 +3,13 @@ package com.cleanup.todoc;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.cleanup.todoc.model.Employee;
-import com.cleanup.todoc.model.Project;
+import com.cleanup.todoc.injection.Injection;
 import com.cleanup.todoc.model.Task;
-import com.cleanup.todoc.repositories.EmployeeDataRepository;
 import com.cleanup.todoc.repositories.ProjectDataRepository;
 import com.cleanup.todoc.repositories.TaskDataRepository;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
 /**
@@ -19,29 +18,15 @@ import java.util.concurrent.Executor;
 public class TaskViewModel extends ViewModel {
     private final TaskDataRepository taskDataSource;
     private final ProjectDataRepository projectDataSource;
-    private final EmployeeDataRepository employeeDataSource;
     private final Executor executor;
 
-    private LiveData<Employee> currentEmployee;
+    private int currentEmployeeId;
 
-    public TaskViewModel(EmployeeDataRepository employeeDataSource, ProjectDataRepository projectDataSource,
+    public TaskViewModel(ProjectDataRepository projectDataSource,
                          TaskDataRepository taskDataSource, Executor executor) {
-        this.employeeDataSource = employeeDataSource;
         this.projectDataSource = projectDataSource;
         this.taskDataSource = taskDataSource;
         this.executor = executor;
-    }
-
-    // -------------
-    // FOR EMPLOYEE
-    // -------------
-
-    public LiveData<Employee> getEmployee(long userId) {
-        return this.currentEmployee;
-    }
-
-    public void initEmployee(LiveData<Employee> currentEmployee) {
-        this.currentEmployee = currentEmployee;
     }
 
     // -------------
@@ -61,8 +46,8 @@ public class TaskViewModel extends ViewModel {
     // FOR TASK
     // -------------
 
-    public LiveData<List<Task>> getTasks(int employeeId) {
-        return taskDataSource.getTasks(employeeId);
+    public LiveData<List<Task>> getTasks() {
+        return taskDataSource.getTasks();
     }
 
     public void createTask(final Task task) {
@@ -74,35 +59,29 @@ public class TaskViewModel extends ViewModel {
         });
     }
 
-    public void deleteTask(final Task task) {
+    public void deleteTask(final long taskId) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                taskDataSource.deleteTask(task);
+                taskDataSource.deleteTask(taskId);
             }
         });
     }
 
-    public void sortAZOrder() {
-        if (currentEmployee.getValue() != null)
-            taskDataSource.sortAZOrder(currentEmployee.getValue().getId());
+    public LiveData<List<Task>> tasksInAZOrder() throws ExecutionException, InterruptedException {
+            return taskDataSource.tasksInAZOrder();
     }
 
-    public void sortZAOrder() {
-        if (currentEmployee.getValue() != null)
-            taskDataSource.sortZAOrder(currentEmployee.getValue().getId());
+    public LiveData<List<Task>> tasksInZAOrder() throws ExecutionException, InterruptedException {
+            return taskDataSource.tasksInZAOrder();
     }
 
-    public void sortByMostRecent() {
-        if (currentEmployee.getValue() != null)
-            taskDataSource.sortByMostRecent(currentEmployee.getValue().getId());
-
+    public LiveData<List<Task>> tasksByMostRecent() throws ExecutionException, InterruptedException {
+            return taskDataSource.tasksByMostRecent();
     }
 
-    public void sortByLessRecent() {
-        if (currentEmployee.getValue() != null)
-            taskDataSource.sortByLessRecent(currentEmployee.getValue().getId());
-
+    public LiveData<List<Task>> tasksByLessRecent() throws ExecutionException, InterruptedException {
+            return taskDataSource.tasksByLessRecent();
     }
 
 }

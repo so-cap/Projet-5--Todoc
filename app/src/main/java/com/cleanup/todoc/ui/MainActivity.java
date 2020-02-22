@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,17 +22,18 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.bumptech.glide.module.LibraryGlideModule;
 import com.cleanup.todoc.R;
 import com.cleanup.todoc.TaskViewModel;
 import com.cleanup.todoc.ViewModelFactory;
 import com.cleanup.todoc.injection.Injection;
-import com.cleanup.todoc.model.Employee;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * <p>Home activity of the application which is displayed when the user opens the app.</p>
@@ -39,10 +41,8 @@ import java.util.Date;
  *
  * @author Gaëtan HERFRAY
  */
-public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
+public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener, DialogInterface.OnShowListener, DialogInterface.OnDismissListener {
     private TaskViewModel taskViewModel;
-    private LiveData<Employee> currentEmployee;
-    private static final int dummyEmployeeId = 1;
 
     /**
      * List of all projects available in the application
@@ -52,13 +52,12 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     /**
      * List of all current tasks of the application
      */
-    @NonNull
-    private final ArrayList<Task> tasks = new ArrayList<>();
+    private List<Task> tasks = new ArrayList<>();
 
     /**
      * The adapter which handles the list of tasks
      */
-    private final TasksAdapter adapter = new TasksAdapter(tasks, this);
+    private TasksAdapter adapter = new TasksAdapter(tasks, this);
 
     /**
      * The sort method to be used to display tasks
@@ -66,11 +65,15 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     @NonNull
     private SortMethod sortMethod = SortMethod.NONE;
 
+
+    @Nullable
+    public AlertDialog.Builder alertBuilder;
+
     /**
      * Dialog to create a new task
      */
     @Nullable
-    public AlertDialog dialog = null;
+    public AlertDialog newTaskDialog = null;
 
     /**
      * EditText that allows user to set the name of a task
@@ -106,8 +109,10 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         setContentView(R.layout.activity_main);
 
+        this.deleteDatabase("TodocDatabase.db");
         configureViewModel();
-        loginEmployee();
+        alertBuilder = new AlertDialog.Builder(this, R.style.Dialog);
+
 
         listTasks = findViewById(R.id.list_tasks);
         lblNoTasks = findViewById(R.id.lbl_no_task);
@@ -115,6 +120,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listTasks.setAdapter(adapter);
+
+        taskViewModel.getTasks().observe(this, this::updateTasksList);
 
         findViewById(R.id.fab_add_task).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,16 +132,17 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
     }
 
-    private void loginEmployee() {
-        //int employeeId = findViewById(R.id.)
-        currentEmployee = taskViewModel.getEmployee(dummyEmployeeId);
+    private static final String TAG = "MainActivity";
+
+    private void updateTasksList(List<Task> tasks) {
+        adapter.updateTasks(tasks);
+        Log.d(TAG, "updateTasksList: 1");
     }
 
     // TODO : mieux comprendre le fonctionnement du ViewModelFactory
     private void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
         taskViewModel = new ViewModelProvider(this, viewModelFactory).get(TaskViewModel.class);
-        taskViewModel.initEmployee(currentEmployee);
     }
 
     @Override
@@ -148,17 +156,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         int id = item.getItemId();
 
         if (id == R.id.filter_alphabetical) {
-            taskViewModel.sortAZOrder();
-        } else if (id == R.id.filter_alphabetical_inverted) {
-            taskViewModel.sortZAOrder();
-        } else if (id == R.id.filter_oldest_first) {
-            taskViewModel.sortByLessRecent();
-        } else if (id == R.id.filter_recent_first) {
-            taskViewModel.sortByMostRecent();
-        }
-
-       /*
-        if (id == R.id.filter_alphabetical) {
             sortMethod = SortMethod.ALPHABETICAL;
         } else if (id == R.id.filter_alphabetical_inverted) {
             sortMethod = SortMethod.ALPHABETICAL_INVERTED;
@@ -168,24 +165,27 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             sortMethod = SortMethod.RECENT_FIRST;
         }
 
-        updateTasks();
-        */
+        try {
+            updateTasks();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onDeleteTask(Task task) {
-        tasks.remove(task);
-        updateTasks();
+    public void onDeleteTask(long id) {
+        taskViewModel.deleteTask(id);
     }
 
     /**
      * Called when the user clicks on the positive button of the Create Task Dialog.
      *
-     * @param dialogInterface the current displayed dialog
+     * @param dialogInterface the current displayed newTaskDialog
      */
-    private void onPositiveButtonClick(DialogInterface dialogInterface) {
-        // If dialog is open
+    private void onTaskDialogPositiveButtonClick(DialogInterface dialogInterface) {
+        // If newTaskDialog is open
         if (dialogEditText != null && dialogSpinner != null) {
             // Get the name of the task
             String taskName = dialogEditText.getText().toString();
@@ -215,16 +215,13 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 );
                */
 
-                if (currentEmployee.getValue() != null) {
-                    Task task = new Task(
-                            taskProject.getId(),
-                            currentEmployee.getValue().getId(),
-                            taskName,
-                            new Date().getTime()
-                    );
-                    addTask(task);
-                }
+                Task task = new Task(0,
+                        taskProject.getId(),
+                        taskName,
+                        new Date().getTime()
+                );
 
+                addTask(task);
 
                 dialogInterface.dismiss();
             }
@@ -233,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 dialogInterface.dismiss();
             }
         }
-        // If dialog is aloready closed
+        // If newTaskDialog is already closed
         else {
             dialogInterface.dismiss();
         }
@@ -259,15 +256,17 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      * @param task the task to be added to the list
      */
     private void addTask(@NonNull Task task) {
-        tasks.add(task);
-        updateTasks();
+        taskViewModel.createTask(task);
+
+        //tasks.add(task);
+        //updateTasks();
     }
 
-    /**
+    /*
      * Updates the list of tasks in the UI
      */
-    private void updateTasks() {
-        if (tasks.size() == 0) {
+    private void updateTasks() throws ExecutionException, InterruptedException {
+        if (adapter.getItemCount() == 0) {
             lblNoTasks.setVisibility(View.VISIBLE);
             listTasks.setVisibility(View.GONE);
         } else {
@@ -275,64 +274,63 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             listTasks.setVisibility(View.VISIBLE);
             switch (sortMethod) {
                 case ALPHABETICAL:
-                    Collections.sort(tasks, new Task.TaskAZComparator());
+                    updateTasksList(taskViewModel.tasksInAZOrder().getValue());
                     break;
                 case ALPHABETICAL_INVERTED:
-                    Collections.sort(tasks, new Task.TaskZAComparator());
+                  taskViewModel.tasksInZAOrder().observe(this,this::updateTasksList);
                     break;
                 case RECENT_FIRST:
-                    Collections.sort(tasks, new Task.TaskRecentComparator());
+                    taskViewModel.tasksByMostRecent().observe(this,this::updateTasksList);
                     break;
                 case OLD_FIRST:
-                    Collections.sort(tasks, new Task.TaskOldComparator());
+                    taskViewModel.tasksByLessRecent().observe(this,this::updateTasksList);
                     break;
 
             }
-            adapter.updateTasks(tasks);
         }
     }
 
     /**
-     * Returns the dialog allowing the user to create a new task.
+     * Returns the newTaskDialog allowing the user to create a new task.
      *
-     * @return the dialog allowing the user to create a new task
+     * @return the newTaskDialog allowing the user to create a new task
      */
     @NonNull
     private AlertDialog getAddTaskDialog() {
-        final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this, R.style.Dialog);
-
         alertBuilder.setTitle(R.string.add_task);
         alertBuilder.setView(R.layout.dialog_add_task);
         alertBuilder.setPositiveButton(R.string.add, null);
-        alertBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                dialogEditText = null;
-                dialogSpinner = null;
-                dialog = null;
-            }
-        });
+        alertBuilder.setOnDismissListener(this);
 
-        dialog = alertBuilder.create();
+        newTaskDialog = alertBuilder.create();
 
         // This instead of listener to positive button in order to avoid automatic dismiss
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+        newTaskDialog.setOnShowListener(this);
 
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
+        return newTaskDialog;
+    }
 
-                Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                button.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onShow(DialogInterface dialogInterface) {
+        if (newTaskDialog != null) {
+            Button button = newTaskDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            button.setOnClickListener(new View.OnClickListener() {
 
-                    @Override
-                    public void onClick(View view) {
-                        onPositiveButtonClick(dialog);
-                    }
-                });
-            }
-        });
+                @Override
+                public void onClick(View view) {
+                    onTaskDialogPositiveButtonClick(newTaskDialog);
+                }
+            });
+        }
+    }
 
-        return dialog;
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        if (dialog == newTaskDialog) {
+            dialogEditText = null;
+            dialogSpinner = null;
+            newTaskDialog = null;
+        }
     }
 
     /**
@@ -346,7 +344,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         }
     }
 
-    /**
+
+    /*
      * List of all possible sort methods for task
      */
     private enum SortMethod {
@@ -354,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
          * Sort alphabetical by name
          */
         ALPHABETICAL,
-        /**
+        /*
          * Inverted sort alphabetical by name
          */
         ALPHABETICAL_INVERTED,
@@ -371,5 +370,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
          */
         NONE
     }
+
 
 }

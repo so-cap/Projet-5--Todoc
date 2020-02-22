@@ -84,9 +84,9 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         /**
          * Called when a task needs to be deleted.
          *
-         * @param task the task that needs to be deleted
+         * @param  id the task that needs to be deleted
          */
-        void onDeleteTask(Task task);
+        void onDeleteTask(long id);
     }
 
     /**
@@ -142,7 +142,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
                 public void onClick(View view) {
                     final Object tag = view.getTag();
                     if (tag instanceof Task) {
-                        TaskViewHolder.this.deleteTaskListener.onDeleteTask((Task) tag);
+                        TaskViewHolder.this.deleteTaskListener.onDeleteTask(((Task) tag).getId());
                     }
                 }
             });

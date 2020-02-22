@@ -23,16 +23,12 @@ import java.util.Comparator;
 @Entity(foreignKeys = {
         @ForeignKey(entity = Project.class,
         parentColumns = "id",
-        childColumns = "projectId"),
-
-        @ForeignKey(entity = Employee.class,
-        parentColumns = "id",
-        childColumns = "employeeId")})
+        childColumns = "projectId")})
 public class Task {
     /**
      * The unique identifier of the task
      */
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private long id;
 
     /**
@@ -40,7 +36,6 @@ public class Task {
      * and the identifier of the employee logged in.
      */
     private long projectId;
-    private int employeeId;
 
     /**
      * The name of the task
@@ -58,23 +53,14 @@ public class Task {
     /**
      * Instantiates a new Task.
      *
-     * @param id                the unique identifier of the task to set
      * @param projectId         the unique identifier of the project associated to the task to set
-     * @param employeeId        the unique identifier of the employee associated to the project
+     * @param id        the unique identifier of the task associated to the project
      * @param name              the name of the task to set
      * @param creationTimestamp the timestamp when the task has been created to set
      */
-    public Task(long id, long projectId, int employeeId,@NonNull String name, long creationTimestamp) {
+    public Task(long id, long projectId,@NonNull String name, long creationTimestamp) {
         this.setId(id);
         this.setProjectId(projectId);
-        this.setEmployeeId(employeeId);
-        this.setName(name);
-        this.setCreationTimestamp(creationTimestamp);
-    }
-
-    public Task(long projectId, int employeeId,@NonNull String name, long creationTimestamp) {
-        this.setProjectId(projectId);
-        this.setEmployeeId(employeeId);
         this.setName(name);
         this.setCreationTimestamp(creationTimestamp);
     }
@@ -91,7 +77,7 @@ public class Task {
     /**
      * Sets the unique identifier of the task.
      *
-     * @param id the unique idenifier of the task to set
+     * @param id the unique identifier of the task to set
      */
     private void setId(long id) {
         this.id = id;
@@ -106,10 +92,10 @@ public class Task {
         this.projectId = projectId;
     }
 
-
-    private void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
+    public long getProjectId() {
+        return projectId;
     }
+
 
     /**
      * Returns the project associated to the task.
@@ -147,6 +133,10 @@ public class Task {
      */
     private void setCreationTimestamp(long creationTimestamp) {
         this.creationTimestamp = creationTimestamp;
+    }
+
+    public long getCreationTimestamp() {
+        return creationTimestamp;
     }
 
     /**
