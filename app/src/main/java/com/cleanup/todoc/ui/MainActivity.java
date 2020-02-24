@@ -130,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         currentEmployee = taskViewModel.getEmployee(dummyEmployeeId);
     }
 
-    // TODO : mieux comprendre le fonctionnement du ViewModelFactory
     private void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
         taskViewModel = new ViewModelProvider(this, viewModelFactory).get(TaskViewModel.class);
@@ -157,19 +156,10 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             taskViewModel.sortByMostRecent();
         }
 
-       /*
-        if (id == R.id.filter_alphabetical) {
-            sortMethod = SortMethod.ALPHABETICAL;
-        } else if (id == R.id.filter_alphabetical_inverted) {
-            sortMethod = SortMethod.ALPHABETICAL_INVERTED;
-        } else if (id == R.id.filter_oldest_first) {
-            sortMethod = SortMethod.OLD_FIRST;
-        } else if (id == R.id.filter_recent_first) {
-            sortMethod = SortMethod.RECENT_FIRST;
-        }
+        if (id == R.id.filter_alphabetical || id == R.id.filter_alphabetical_inverted
+                || id == R.id.filter_oldest_first || id == R.id.filter_recent_first)
+            updateTasks();
 
-        updateTasks();
-        */
         return super.onOptionsItemSelected(item);
     }
 
@@ -202,18 +192,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             }
             // If both project and name of the task have been set
             else if (taskProject != null) {
-                // TODO: Replace this by id of persisted task
-              /*  long id = (long) (Math.random() * 50000);
-
-
-                Task task = new Task(
-                        id,
-                        taskProject.getId(),
-                        currentEmployee.getId(),
-                        taskName,
-                        new Date().getTime()
-                );
-               */
 
                 if (currentEmployee.getValue() != null) {
                     Task task = new Task(
