@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -24,25 +25,19 @@ public interface TaskDao {
     @Update
     void update(Task task);
 
-    @Delete
-    void delete(Task task);
+    @Query("DELETE FROM Task WHERE id = :id")
+    void delete(int id);
+
+    @Query("DELETE FROM Task")
+    void deleteAllTasks();
+
+    @Query("SELECT * FROM Task ORDER BY creationTimestamp DESC")
+    LiveData<List<Task>> getTasksByMostRecentOrder();
 
     @Query("DELETE FROM Task WHERE employeeId = :employeeId")
     void deleteAllTasks(int employeeId);
 
     @Query("SELECT * FROM Task WHERE employeeId = :employeeId")
     LiveData<List<Task>> getTasks(int employeeId);
-
-    @Query("SELECT * FROM Task WHERE employeeId = :employeeId ORDER BY creationTimestamp DESC")
-    LiveData<List<Task>> getTasksByMostRecentOrder(int employeeId);
-
-    @Query("SELECT * FROM Task WHERE employeeId = :employeeId ORDER BY creationTimestamp ASC")
-    LiveData<List<Task>> getTasksByLessRecentOrder(int employeeId);
-
-    @Query("SELECT * FROM Task WHERE employeeId = :employeeId ORDER BY name ASC")
-    LiveData<List<Task>> getTasksByAscendingOrder(int employeeId);
-
-    @Query("SELECT * FROM Task WHERE employeeId = :employeeId ORDER BY name DESC")
-    LiveData<List<Task>> getTasksByDescendingOrder(int employeeId);
 
 }

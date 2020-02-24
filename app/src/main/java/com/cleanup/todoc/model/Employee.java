@@ -1,12 +1,14 @@
 package com.cleanup.todoc.model;
 
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 /**
  * Created by SOPHIE on 21/02/2020.
  */
 @Entity
 public class Employee {
+    @PrimaryKey (autoGenerate = true)
     private int id;
     private String firstname;
     private String lastname;

@@ -36,8 +36,8 @@ public class TaskViewModel extends ViewModel {
     // FOR EMPLOYEE
     // -------------
 
-    public LiveData<Employee> getEmployee(long userId) {
-        return this.currentEmployee;
+    public LiveData<Employee> getEmployee(int id) {
+        return employeeDataSource.getEmployee(id);
     }
 
     public void initEmployee(LiveData<Employee> currentEmployee) {
@@ -74,35 +74,13 @@ public class TaskViewModel extends ViewModel {
         });
     }
 
-    public void deleteTask(final Task task) {
+    public void deleteTask(final int taskId) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                taskDataSource.deleteTask(task);
+                taskDataSource.deleteTask(taskId);
             }
         });
-    }
-
-    public void sortAZOrder() {
-        if (currentEmployee.getValue() != null)
-            taskDataSource.sortAZOrder(currentEmployee.getValue().getId());
-    }
-
-    public void sortZAOrder() {
-        if (currentEmployee.getValue() != null)
-            taskDataSource.sortZAOrder(currentEmployee.getValue().getId());
-    }
-
-    public void sortByMostRecent() {
-        if (currentEmployee.getValue() != null)
-            taskDataSource.sortByMostRecent(currentEmployee.getValue().getId());
-
-    }
-
-    public void sortByLessRecent() {
-        if (currentEmployee.getValue() != null)
-            taskDataSource.sortByLessRecent(currentEmployee.getValue().getId());
-
     }
 
 }

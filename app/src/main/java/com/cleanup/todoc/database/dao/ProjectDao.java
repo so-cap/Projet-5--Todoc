@@ -1,5 +1,6 @@
 package com.cleanup.todoc.database.dao;
 
+import androidx.annotation.ColorInt;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
@@ -18,7 +19,7 @@ public interface ProjectDao {
     @Query("SELECT * FROM Project WHERE id = :projectId")
     LiveData<Project> getProject(long projectId);
 
-  /*  @Query("SELECT * FROM Project")
+    @Query("SELECT * FROM Project")
     LiveData<List<Project>> getAllProjects();
 
     @Query("SELECT * FROM Task WHERE projectId = :projectId AND employeeId = :employeeId")
@@ -27,5 +28,10 @@ public interface ProjectDao {
     @Insert
     void insertProject(Project project);
 
-   */
+    @Query("SELECT color FROM Project WHERE id = :id")
+    LiveData<Integer> getProjectColor(long id);
+
+    @Query("SELECT name FROM Project WHERE id = :id")
+    LiveData<String> getProjectName(long id);
+
 }

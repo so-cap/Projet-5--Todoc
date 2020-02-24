@@ -84,9 +84,9 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         /**
          * Called when a task needs to be deleted.
          *
-         * @param task the task that needs to be deleted
+         * @param  id the task that needs to be deleted
          */
-        void onDeleteTask(Task task);
+        void onDeleteTask(int id);
     }
 
     /**
@@ -142,7 +142,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
                 public void onClick(View view) {
                     final Object tag = view.getTag();
                     if (tag instanceof Task) {
-                        TaskViewHolder.this.deleteTaskListener.onDeleteTask((Task) tag);
+                        TaskViewHolder.this.deleteTaskListener.onDeleteTask(((Task) tag).getId());
                     }
                 }
             });
@@ -157,13 +157,10 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             lblTaskName.setText(task.getName());
             imgDelete.setTag(task);
 
-            ProjectDao projectDao = TodocDatabase.getInstance(itemView.getContext()).projectDao();
-            final LiveData<Project> taskProject = task.getProject(projectDao);
+            final Project taskProject = task.getProject(task.getProjectId());
             if (taskProject != null) {
-                if (taskProject.getValue() != null) {
-                    imgProject.setSupportImageTintList(ColorStateList.valueOf(taskProject.getValue().getColor()));
-                    lblProjectName.setText(taskProject.getValue().getName());
-                }
+                    imgProject.setSupportImageTintList(ColorStateList.valueOf(taskProject.getColor()));
+                    lblProjectName.setText(taskProject.getName());
             } else {
                 imgProject.setVisibility(View.INVISIBLE);
                 lblProjectName.setText("");

@@ -4,6 +4,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 /**
  * <p>Models for project in which tasks are included.</p>
@@ -16,6 +17,7 @@ public class Project {
     /**
      * The unique identifier of the project
      */
+    @PrimaryKey
     private final long id;
 
     /**
@@ -56,6 +58,14 @@ public class Project {
                 new Project(2L, "Projet Lucidia", 0xFFB4CDBA),
                 new Project(3L, "Projet Circus", 0xFFA3CED2),
         };
+    }
+
+    public static Project getProjectById(long id) {
+        for(int i = 0; i < 3; i++){
+            if (getAllProjects()[i].getId() == id)
+                return getAllProjects()[i];
+        }
+        return null;
     }
 
     /**

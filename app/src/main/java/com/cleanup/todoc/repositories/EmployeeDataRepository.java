@@ -1,7 +1,11 @@
 package com.cleanup.todoc.repositories;
 
+import androidx.lifecycle.LiveData;
+
 import com.cleanup.todoc.database.dao.EmployeeDao;
 import com.cleanup.todoc.model.Employee;
+
+import java.util.List;
 
 /**
  * Created by SOPHIE on 21/02/2020.
@@ -18,7 +22,11 @@ public class EmployeeDataRepository {
         employeeDao.createEmployee(employee);
     }
 
-    public void getEmployee(int employeeId){
-        employeeDao.getEmployee(employeeId);
+    public LiveData<Employee> getEmployee(int employeeId){
+        return employeeDao.getEmployee(employeeId);
+    }
+
+    public LiveData<List<Employee>> getEmployees(){
+        return employeeDao.getEmployees();
     }
 }

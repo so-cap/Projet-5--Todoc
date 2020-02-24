@@ -21,8 +21,8 @@ public class TaskDataRepository {
         taskDao.insert(task);
     }
 
-    public void deleteTask(Task task){
-     taskDao.delete(task);
+    public void deleteTask(int id){
+     taskDao.delete(id);
     }
 
     public void deleteAllTasks(int employeeId){
@@ -31,21 +31,5 @@ public class TaskDataRepository {
 
     public LiveData<List<Task>> getTasks(int employeeId){
         return taskDao.getTasks(employeeId);
-    }
-
-    public void sortAZOrder(int employeeId){
-        taskDao.getTasksByAscendingOrder(employeeId);
-    }
-
-    public void sortZAOrder(int employeeId){
-        taskDao.getTasksByDescendingOrder(employeeId);
-    }
-
-    public void sortByMostRecent(int employeeId){
-        taskDao.getTasksByMostRecentOrder(employeeId);
-    }
-
-    public void sortByLessRecent(int employeeId){
-        taskDao.getTasksByLessRecentOrder(employeeId);
     }
 }

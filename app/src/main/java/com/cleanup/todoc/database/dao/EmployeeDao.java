@@ -8,6 +8,8 @@ import androidx.room.Query;
 
 import com.cleanup.todoc.model.Employee;
 
+import java.util.List;
+
 /**
  * Created by SOPHIE on 21/02/2020.
  */
@@ -19,5 +21,9 @@ public interface EmployeeDao {
 
     @Query("SELECT * FROM Employee WHERE id = :employeeId")
     LiveData<Employee> getEmployee(int employeeId);
+
+    @Query("SELECT * FROM Employee")
+    LiveData<List<Employee>> getEmployees();
+
 
 }

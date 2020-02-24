@@ -3,6 +3,7 @@ package com.cleanup.todoc.model;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
@@ -32,14 +33,17 @@ public class Task {
     /**
      * The unique identifier of the task
      */
-    @PrimaryKey
-    private long id;
+    @PrimaryKey(autoGenerate = true)
+    private int id;
 
     /**
      * The unique identifier of the project associated to the task
      * and the identifier of the employee logged in.
      */
+    @ColumnInfo(index = true)
     private long projectId;
+
+    @ColumnInfo(index = true)
     private int employeeId;
 
     /**
@@ -55,16 +59,16 @@ public class Task {
      */
     private long creationTimestamp;
 
-    /**
+    /*
      * Instantiates a new Task.
      *
      * @param id                the unique identifier of the task to set
      * @param projectId         the unique identifier of the project associated to the task to set
-     * @param employeeId        the unique identifier of the employee associated to the project
+     * @param id        the unique identifier of the task associated to the project
      * @param name              the name of the task to set
      * @param creationTimestamp the timestamp when the task has been created to set
      */
-    public Task(long id, long projectId, int employeeId,@NonNull String name, long creationTimestamp) {
+ /*   public Task(long id, long projectId,@NonNull String name, long creationTimestamp) {
         this.setId(id);
         this.setProjectId(projectId);
         this.setEmployeeId(employeeId);
@@ -72,19 +76,17 @@ public class Task {
         this.setCreationTimestamp(creationTimestamp);
     }
 
-    public Task(long projectId, int employeeId,@NonNull String name, long creationTimestamp) {
-        this.setProjectId(projectId);
-        this.setEmployeeId(employeeId);
-        this.setName(name);
-        this.setCreationTimestamp(creationTimestamp);
-    }
+  */
+
+    public Task()
+    {}
 
     /**
      * Returns the unique identifier of the task.
      *
      * @return the unique identifier of the task
      */
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -93,7 +95,7 @@ public class Task {
      *
      * @param id the unique idenifier of the task to set
      */
-    private void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -102,12 +104,19 @@ public class Task {
      *
      * @param projectId the unique identifier of the project associated to the task to set
      */
-    private void setProjectId(long projectId) {
+    public void setProjectId(long projectId) {
         this.projectId = projectId;
     }
 
+    public long getProjectId() {
+        return projectId;
+    }
 
-    private void setEmployeeId(int employeeId) {
+    public int getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(int employeeId) {
         this.employeeId = employeeId;
     }
 
@@ -117,8 +126,8 @@ public class Task {
      * @return the project associated to the task
      */
     @Nullable
-    public LiveData<Project> getProject(ProjectDao projectDao) {
-        return projectDao.getProject(projectId);
+    public Project getProject(long projectId) {
+        return Project.getProjectById(projectId);
     }
 
     /**
@@ -136,7 +145,7 @@ public class Task {
      *
      * @param name the name of the task to set
      */
-    private void setName(@NonNull String name) {
+    public void setName(@NonNull String name) {
         this.name = name;
     }
 
@@ -145,8 +154,12 @@ public class Task {
      *
      * @param creationTimestamp the timestamp when the task has been created to set
      */
-    private void setCreationTimestamp(long creationTimestamp) {
+    public void setCreationTimestamp(long creationTimestamp) {
         this.creationTimestamp = creationTimestamp;
+    }
+
+    public long getCreationTimestamp() {
+        return creationTimestamp;
     }
 
     /**
