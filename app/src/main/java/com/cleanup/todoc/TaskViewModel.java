@@ -1,6 +1,8 @@
 package com.cleanup.todoc;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.cleanup.todoc.injection.Injection;
@@ -67,7 +69,7 @@ public class TaskViewModel extends ViewModel {
     }
 
     public LiveData<List<Task>> tasksInAZOrder(){
-            return taskDataSource.tasksInAZOrder();
+            return Transformations.switchMap(taskDataSource.getTasks(), tasks -> taskDataSource.tasksInAZOrder());
     }
 
     public LiveData<List<Task>> tasksInZAOrder() {

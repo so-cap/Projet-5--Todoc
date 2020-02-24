@@ -8,7 +8,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,8 +34,10 @@ import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -53,12 +57,12 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     /**
      * List of all current tasks of the application
      */
-    private List<Task> tasks = new ArrayList<>();
-
+    public List<Task> allTasks = new ArrayList<>();
+    
     /**
      * The adapter which handles the list of tasks
      */
-    private TasksAdapter adapter = new TasksAdapter(tasks, this);
+    private TasksAdapter adapter = new TasksAdapter(allTasks, this);
 
     /**
      * The sort method to be used to display tasks
@@ -114,6 +118,15 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listTasks.setAdapter(adapter);
+
+        taskViewModel.getTasks().observe(this, new Observer<List<Task>>() {
+            @Override
+            public void onChanged(List<Task> tasks) {
+                allTasks = tasks;
+                adapter.updateTasks(tasks);
+                showOrHideList(tasks);
+            }
+        });
 
         updateTasks();
 
@@ -244,61 +257,25 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     /*
      * Updates the list of tasks in the UI
      */
-    // TODO: cant find yet a way to update data on start
     private void updateTasks() {
-        Log.d(TAG, "updateTasks: " + sortMethod);
         switch (sortMethod) {
             case ALPHABETICAL:
-                taskViewModel.tasksInAZOrder().observe(this, new Observer<List<Task>>() {
-                    @Override
-                    public void onChanged(List<Task> tasks) {
-                        adapter.updateTasks(tasks);
-                        showOrHideList(tasks);
-                    }
-                });
+                Collections.sort(allTasks, new Task.TaskAZComparator());
                 break;
             case ALPHABETICAL_INVERTED:
-                taskViewModel.tasksInZAOrder().observe(this, new Observer<List<Task>>() {
-                    @Override
-                    public void onChanged(List<Task> tasks) {
-                        adapter.updateTasks(tasks);
-                        showOrHideList(tasks);
-                    }
-                });
+                Collections.sort(allTasks, new Task.TaskZAComparator());
                 break;
             case RECENT_FIRST:
-                taskViewModel.tasksByMostRecent().observe(this, new Observer<List<Task>>() {
-                    @Override
-                    public void onChanged(List<Task> tasks) {
-                        adapter.updateTasks(tasks);
-                        showOrHideList(tasks);
-                    }
-                });
+                Collections.sort(allTasks, new Task.TaskRecentComparator());
                 break;
             case OLD_FIRST:
-                taskViewModel.tasksByLessRecent().observe(this, new Observer<List<Task>>() {
-                    @Override
-                    public void onChanged(List<Task> tasks) {
-                        adapter.updateTasks(tasks);
-                        showOrHideList(tasks);
-                        Log.d(TAG, "old first: " + sortMethod);
-                    }
-                });
+                Collections.sort(allTasks, new Task.TaskOldComparator());
                 break;
             case NONE:
-                taskViewModel.getTasks().observe(this, new Observer<List<Task>>() {
-                    @Override
-                    public void onChanged(List<Task> tasks) {
-                        adapter.updateTasks(tasks);
-                        showOrHideList(tasks);
-                        for (Task task : tasks) {
-                            Log.d(TAG, "task id: " + task.getId());
-                        }
-                    }
-                });
                 break;
-
         }
+        showOrHideList(allTasks);
+        adapter.updateTasks(allTasks);
     }
 
     private void showOrHideList(List<Task> tasks) {
@@ -365,7 +342,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             dialogSpinner.setAdapter(adapter);
         }
     }
-
 
     /*
      * List of all possible sort methods for task
