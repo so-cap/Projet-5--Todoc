@@ -106,23 +106,16 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         setContentView(R.layout.activity_main);
 
-        this.deleteDatabase("TodocDatabase.db");
+        //this.deleteDatabase("TodocDatabase.db");
         configureViewModel();
-
 
         listTasks = findViewById(R.id.list_tasks);
         lblNoTasks = findViewById(R.id.lbl_no_task);
 
-
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listTasks.setAdapter(adapter);
 
-        taskViewModel.getTasks().observe(this, new Observer<List<Task>>() {
-            @Override
-            public void onChanged(List<Task> tasks) {
-                adapter.updateTasks(tasks);
-            }
-        });
+        updateTasks();
 
         findViewById(R.id.fab_add_task).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 showAddTaskDialog();
             }
         });
-
     }
 
     private static final String TAG = "MainActivity";
@@ -161,11 +153,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             sortMethod = SortMethod.RECENT_FIRST;
         }
 
-        try {
-            updateTasks();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        updateTasks();
 
         return super.onOptionsItemSelected(item);
     }
@@ -199,12 +187,19 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             // If both project and name of the task have been set
             else if (taskProject != null) {
                 // TODO: Replace this by id of persisted task
-
-                Task task = new Task(0,
+            /*    Task task = new Task(0,
                         taskProject.getId(),
                         taskName,
                         new Date().getTime()
                 );
+
+             */
+
+                Task task = new Task();
+                task.setName(taskName);
+                task.setProjectId(taskProject.getId());
+                task.setCreationTimestamp(new Date().getTime());
+
 
                 addTask(task);
 
@@ -249,50 +244,70 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     /*
      * Updates the list of tasks in the UI
      */
-    private void updateTasks() throws ExecutionException, InterruptedException {
-        if (adapter.getItemCount() == 0) {
+    // TODO: cant find yet a way to update data on start
+    private void updateTasks() {
+        Log.d(TAG, "updateTasks: " + sortMethod);
+        switch (sortMethod) {
+            case ALPHABETICAL:
+                taskViewModel.tasksInAZOrder().observe(this, new Observer<List<Task>>() {
+                    @Override
+                    public void onChanged(List<Task> tasks) {
+                        adapter.updateTasks(tasks);
+                        showOrHideList(tasks);
+                    }
+                });
+                break;
+            case ALPHABETICAL_INVERTED:
+                taskViewModel.tasksInZAOrder().observe(this, new Observer<List<Task>>() {
+                    @Override
+                    public void onChanged(List<Task> tasks) {
+                        adapter.updateTasks(tasks);
+                        showOrHideList(tasks);
+                    }
+                });
+                break;
+            case RECENT_FIRST:
+                taskViewModel.tasksByMostRecent().observe(this, new Observer<List<Task>>() {
+                    @Override
+                    public void onChanged(List<Task> tasks) {
+                        adapter.updateTasks(tasks);
+                        showOrHideList(tasks);
+                    }
+                });
+                break;
+            case OLD_FIRST:
+                taskViewModel.tasksByLessRecent().observe(this, new Observer<List<Task>>() {
+                    @Override
+                    public void onChanged(List<Task> tasks) {
+                        adapter.updateTasks(tasks);
+                        showOrHideList(tasks);
+                        Log.d(TAG, "old first: " + sortMethod);
+                    }
+                });
+                break;
+            case NONE:
+                taskViewModel.getTasks().observe(this, new Observer<List<Task>>() {
+                    @Override
+                    public void onChanged(List<Task> tasks) {
+                        adapter.updateTasks(tasks);
+                        showOrHideList(tasks);
+                        for (Task task : tasks) {
+                            Log.d(TAG, "task id: " + task.getId());
+                        }
+                    }
+                });
+                break;
+
+        }
+    }
+
+    private void showOrHideList(List<Task> tasks) {
+        if (tasks.isEmpty()) {
             lblNoTasks.setVisibility(View.VISIBLE);
             listTasks.setVisibility(View.GONE);
         } else {
             lblNoTasks.setVisibility(View.GONE);
             listTasks.setVisibility(View.VISIBLE);
-            switch (sortMethod) {
-                case ALPHABETICAL:
-                    taskViewModel.tasksInAZOrder().observe(this, new Observer<List<Task>>() {
-                        @Override
-                        public void onChanged(List<Task> tasks) {
-                            adapter.updateTasks(tasks);
-                        }
-                    });
-                    break;
-                case ALPHABETICAL_INVERTED:
-                    taskViewModel.tasksInZAOrder().observe(this, new Observer<List<Task>>() {
-                        @Override
-                        public void onChanged(List<Task> tasks) {
-                            adapter.updateTasks(tasks);
-                        }
-                    });
-                    break;
-                case RECENT_FIRST:
-                    taskViewModel.tasksByMostRecent().observe(this, new Observer<List<Task>>() {
-                        @Override
-                        public void onChanged(List<Task> tasks) {
-                            adapter.updateTasks(tasks);
-                        }
-                    });
-                    break;
-                case OLD_FIRST:
-                    taskViewModel.tasksByLessRecent().observe(this, new Observer<List<Task>>() {
-                        @Override
-                        public void onChanged(List<Task> tasks) {
-                            adapter.updateTasks(tasks);
-                        }
-                    });
-                    break;
-                case NONE:
-                    break;
-
-            }
         }
     }
 

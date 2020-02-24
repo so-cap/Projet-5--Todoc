@@ -32,9 +32,6 @@ public interface TaskDao {
     @Query("SELECT * FROM Task")
     LiveData<List<Task>> getTasks();
 
-    @Query("SELECT * FROM Task WHERE projectId = :projectId")
-    LiveData<List<Task>> getTasksByProject(long projectId);
-
     @Query("SELECT * FROM Task ORDER BY creationTimestamp DESC")
     LiveData<List<Task>> getTasksByMostRecentOrder();
 

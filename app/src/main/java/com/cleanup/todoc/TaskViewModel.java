@@ -20,8 +20,6 @@ public class TaskViewModel extends ViewModel {
     private final ProjectDataRepository projectDataSource;
     private final Executor executor;
 
-    private int currentEmployeeId;
-
     public TaskViewModel(ProjectDataRepository projectDataSource,
                          TaskDataRepository taskDataSource, Executor executor) {
         this.projectDataSource = projectDataSource;
@@ -68,19 +66,19 @@ public class TaskViewModel extends ViewModel {
         });
     }
 
-    public LiveData<List<Task>> tasksInAZOrder() throws ExecutionException, InterruptedException {
+    public LiveData<List<Task>> tasksInAZOrder(){
             return taskDataSource.tasksInAZOrder();
     }
 
-    public LiveData<List<Task>> tasksInZAOrder() throws ExecutionException, InterruptedException {
+    public LiveData<List<Task>> tasksInZAOrder() {
             return taskDataSource.tasksInZAOrder();
     }
 
-    public LiveData<List<Task>> tasksByMostRecent() throws ExecutionException, InterruptedException {
+    public LiveData<List<Task>> tasksByMostRecent() {
             return taskDataSource.tasksByMostRecent();
     }
 
-    public LiveData<List<Task>> tasksByLessRecent() throws ExecutionException, InterruptedException {
+    public LiveData<List<Task>> tasksByLessRecent() {
             return taskDataSource.tasksByLessRecent();
     }
 

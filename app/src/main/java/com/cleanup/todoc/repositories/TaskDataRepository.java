@@ -37,71 +37,19 @@ public class TaskDataRepository {
         return taskDao.getTasks();
     }
 
-    public LiveData<List<Task>> tasksInAZOrder() throws ExecutionException, InterruptedException {
-        return new AZOrderAsyncTask(taskDao).execute().get();
+    public LiveData<List<Task>> tasksInAZOrder(){
+        return taskDao.getTasksByAscendingOrder();
     }
 
-    public LiveData<List<Task>> tasksInZAOrder() throws ExecutionException, InterruptedException {
-        return new ZAOrderAsyncTask(taskDao).execute().get();
+    public LiveData<List<Task>> tasksInZAOrder() {
+        return taskDao.getTasksByDescendingOrder();
     }
 
-    public LiveData<List<Task>> tasksByMostRecent() throws ExecutionException, InterruptedException {
-        return new MostRecentOrderAsyncTask(taskDao).execute().get();
+    public LiveData<List<Task>> tasksByMostRecent() {
+        return taskDao.getTasksByMostRecentOrder();
     }
 
-    public LiveData<List<Task>> tasksByLessRecent() throws ExecutionException, InterruptedException {
-        return new LessRecentOrderAsyncTask(taskDao).execute().get();
-    }
-
-    private static class AZOrderAsyncTask extends AsyncTask<Void, Void,LiveData<List<Task>>> {
-        private TaskDao taskDao;
-
-        private AZOrderAsyncTask(TaskDao taskDao){
-            this.taskDao = taskDao;
-        }
-
-        @Override
-        protected LiveData<List<Task>> doInBackground(Void...voids) {
-           return taskDao.getTasksByAscendingOrder();
-        }
-    }
-
-    private static class ZAOrderAsyncTask extends AsyncTask<Void, Void, LiveData<List<Task>>> {
-        private TaskDao taskDao;
-
-        private ZAOrderAsyncTask(TaskDao taskDao){
-            this.taskDao = taskDao;
-        }
-
-        @Override
-        protected LiveData<List<Task>> doInBackground(Void... voids) {
-            return taskDao.getTasksByDescendingOrder();
-        }
-    }
-
-    private static class MostRecentOrderAsyncTask extends AsyncTask<Void, Void, LiveData<List<Task>>> {
-        private TaskDao taskDao;
-
-        private MostRecentOrderAsyncTask(TaskDao taskDao){
-            this.taskDao = taskDao;
-        }
-
-        @Override
-        protected LiveData<List<Task>> doInBackground(Void... voids) {
-            return taskDao.getTasksByMostRecentOrder();
-        }
-    }
-
-    private static class LessRecentOrderAsyncTask extends AsyncTask<Void, Void, LiveData<List<Task>>> {
-        private TaskDao taskDao;
-
-        private LessRecentOrderAsyncTask(TaskDao taskDao){
-            this.taskDao = taskDao;
-        }
-
-        @Override
-        protected LiveData<List<Task>> doInBackground(Void... voids) {
-            return taskDao.getTasksByLessRecentOrder();
-        }
+    public LiveData<List<Task>> tasksByLessRecent() {
+        return taskDao.getTasksByLessRecentOrder();
     }
 }
