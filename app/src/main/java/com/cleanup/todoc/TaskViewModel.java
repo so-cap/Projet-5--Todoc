@@ -10,12 +10,9 @@ import com.cleanup.todoc.repositories.EmployeeDataRepository;
 import com.cleanup.todoc.repositories.ProjectDataRepository;
 import com.cleanup.todoc.repositories.TaskDataRepository;
 
-import java.sql.CallableStatement;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
+
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 /**
  * Created by SOPHIE on 21/02/2020.
@@ -25,8 +22,6 @@ public class TaskViewModel extends ViewModel {
     private final ProjectDataRepository projectDataSource;
     private final EmployeeDataRepository employeeDataSource;
     private final Executor executor;
-
-    private Employee currentEmployee;
 
     public TaskViewModel(EmployeeDataRepository employeeDataSource, ProjectDataRepository projectDataSource,
                          TaskDataRepository taskDataSource, Executor executor) {
@@ -40,16 +35,8 @@ public class TaskViewModel extends ViewModel {
     // FOR EMPLOYEE
     // -------------
 
-    public LiveData<Employee> getEmployee(int id) {
-        return employeeDataSource.getEmployee(id);
-    }
-
-    public LiveData<List<Employee>> getEmployees() {
-        return employeeDataSource.getEmployees();
-    }
-
-    public void initEmployee(Employee currentEmployee) {
-        this.currentEmployee = currentEmployee;
+    public LiveData<Employee> getEmployee(String email, String password) {
+        return employeeDataSource.getEmployee(email, password);
     }
 
     public void createEmployee(final Employee employee) {
@@ -65,10 +52,9 @@ public class TaskViewModel extends ViewModel {
     // FOR PROJECT
     // -------------
 
-    public LiveData<List<Project>> getAllProjects(){
+    public LiveData<List<Project>> getAllProjects() {
         return projectDataSource.getAllProjects();
     }
-
 
     // -------------
     // FOR TASK

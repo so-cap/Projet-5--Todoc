@@ -16,7 +16,6 @@ import java.util.concurrent.Executors;
  * Created by SOPHIE on 21/02/2020.
  */
 public class Injection {
-    private static Employee employee = new Employee(0,"Sophie","Cap", "sophie@email.com", "mdp" );
 
     public static EmployeeDataRepository provideEmployeeDataSource(Context context) {
         TodocDatabase database = TodocDatabase.getInstance(context);
@@ -41,10 +40,5 @@ public class Injection {
         TaskDataRepository taskDataSource = provideTaskDataSource(context);
         Executor executor = provideExecutor();
         return new ViewModelFactory(employeeDataSource, projectDataSource, taskDataSource, executor);
-    }
-
-
-    public static Employee getDummyEmployee(){
-        return employee;
     }
 }

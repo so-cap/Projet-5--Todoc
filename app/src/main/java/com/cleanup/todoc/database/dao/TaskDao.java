@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -30,9 +29,6 @@ public interface TaskDao {
 
     @Query("DELETE FROM Task")
     void deleteAllTasks();
-
-    @Query("SELECT * FROM Task ORDER BY creationTimestamp DESC")
-    LiveData<List<Task>> getTasksByMostRecentOrder();
 
     @Query("DELETE FROM Task WHERE employeeId = :employeeId")
     void deleteAllTasks(int employeeId);

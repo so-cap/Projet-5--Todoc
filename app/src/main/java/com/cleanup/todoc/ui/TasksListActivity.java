@@ -7,15 +7,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,10 +22,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.bumptech.glide.module.LibraryGlideModule;
 import com.cleanup.todoc.R;
 import com.cleanup.todoc.TaskViewModel;
 import com.cleanup.todoc.ViewModelFactory;
+import com.cleanup.todoc.injection.DI;
 import com.cleanup.todoc.injection.Injection;
 import com.cleanup.todoc.model.Employee;
 import com.cleanup.todoc.model.Project;
@@ -38,8 +35,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.TimerTask;
-import java.util.concurrent.ExecutionException;
+
+import static com.cleanup.todoc.MainActivity.EMPLOYEE_ID_EXTRA;
 
 /**
  * <p>Home activity of the application which is displayed when the user opens the app.</p>
@@ -47,18 +44,14 @@ import java.util.concurrent.ExecutionException;
  *
  * @author Gaëtan HERFRAY
  */
-public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener, DialogInterface.OnShowListener, DialogInterface.OnDismissListener {
+public class TasksListActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener, DialogInterface.OnShowListener, DialogInterface.OnDismissListener {
     private TaskViewModel taskViewModel;
-    private Employee currentEmployee;
-    private static final int dummyEmployeeId = 1;
     private int currentEmployeeId;
 
     /**
      * List of all projects available in the application
      */
     private Project[] allProjects;
-
-    private List<Employee> employees = new ArrayList<>();
 
     /**
      * List of all current tasks of the application
@@ -109,19 +102,14 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     @SuppressWarnings("NullableProblems")
     @NonNull
     private TextView lblNoTasks;
-    private int enteredId;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_tasks_list);
 
-        //this.deleteDatabase("TodocDatabase.db");
-        configureViewModel();
-        //loginEmployee();
-
-        enteredId = dummyEmployeeId;
+        taskViewModel = (TaskViewModel) DI.getViewModel();
 
         listTasks = findViewById(R.id.list_tasks);
         lblNoTasks = findViewById(R.id.lbl_no_task);
@@ -129,38 +117,11 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listTasks.setAdapter(adapter);
 
-        taskViewModel.createEmployee(Injection.getDummyEmployee());
+        if(getIntent().hasExtra(EMPLOYEE_ID_EXTRA))
+            currentEmployeeId = getIntent().getIntExtra(EMPLOYEE_ID_EXTRA, -1);
 
-
-        taskViewModel.getTasks(dummyEmployeeId).observe(this, new Observer<List<Task>>() {
-            @Override
-            public void onChanged(List<Task> tasks) {
-                allTasks = tasks;
-                adapter.updateTasks(tasks);
-                showOrHideList(tasks);
-            }
-        });
-
-        taskViewModel.getEmployees().observe(this, new Observer<List<Employee>>() {
-            @Override
-            public void onChanged(List<Employee> pEmployees) {
-                employees = pEmployees;
-                System.out.println("EMPLOYEE" + employees.contains(Injection.getDummyEmployee()) + " id: "
-                        + employees.get(0).getFirstname() + employees.get(0).getId());
-
-                currentEmployee = Injection.getDummyEmployee();
-            }
-        });
-
-        taskViewModel.getAllProjects().observe(this, new Observer<List<Project>>() {
-            @Override
-            public void onChanged(List<Project> pProjects) {
-                 allProjects = pProjects.toArray(new Project[0]);
-            }
-        });
-
-        updateTasks();
-
+        observeTasks();
+        initProjects();
 
         findViewById(R.id.fab_add_task).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,20 +131,23 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         });
     }
 
-   /* private void loginEmployee() {
-        if (employees.contains(Injection.getDummyEmployee())){
-            taskViewModel.createEmployee(Injection.getDummyEmployee());
-        }
-        else {
-            currentEmployeeId = enteredId;
-        }
+    private void observeTasks() {
+        taskViewModel.getTasks(currentEmployeeId).observe(this, new Observer<List<Task>>() {
+            @Override
+            public void onChanged(final List<Task> tasks) {
+                allTasks = tasks;
+                updateTasks();
+            }
+        });
     }
-    */
 
-    private void configureViewModel() {
-        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        taskViewModel = new ViewModelProvider(this, viewModelFactory).get(TaskViewModel.class);
-        taskViewModel.initEmployee(currentEmployee);
+    private void initProjects() {
+        taskViewModel.getAllProjects().observe(this, new Observer<List<Project>>() {
+            @Override
+            public void onChanged(List<Project> pProjects) {
+                allProjects = pProjects.toArray(new Project[0]);
+            }
+        });
     }
 
     @Override
@@ -241,11 +205,10 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             }
             // If both project and name of the task have been set
             else if (taskProject != null) {
-
                 Task task = new Task();
                 task.setName(taskName);
                 task.setProjectId(taskProject.getId());
-                task.setEmployeeId(dummyEmployeeId);
+                task.setEmployeeId(currentEmployeeId);
                 task.setCreationTimestamp(new Date().getTime());
 
                 addTask(task);
@@ -264,6 +227,17 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     }
 
     /**
+     * Adds the given task to the list of created tasks.
+     *
+     * @param task the task to be added to the list
+     */
+    private void addTask(@NonNull Task task) {
+        taskViewModel.createTask(task);
+        lblNoTasks.setVisibility(View.GONE);
+        listTasks.setVisibility(View.VISIBLE);
+    }
+
+    /**
      * Shows the Dialog for adding a Task
      */
     private void showAddTaskDialog() {
@@ -277,49 +251,34 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         populateDialogSpinner();
     }
 
-    /**
-     * Adds the given task to the list of created tasks.
-     *
-     * @param task the task to be added to the list
-     */
-    private void addTask(@NonNull Task task) {
-        taskViewModel.createTask(task);
-        lblNoTasks.setVisibility(View.GONE);
-        listTasks.setVisibility(View.VISIBLE);
-    }
-
     /*
      * Updates the list of tasks in the UI
      */
     private void updateTasks() {
-        switch (sortMethod) {
-            case ALPHABETICAL:
-                Collections.sort(allTasks, new Task.TaskAZComparator());
-                break;
-            case ALPHABETICAL_INVERTED:
-                Collections.sort(allTasks, new Task.TaskZAComparator());
-                break;
-            case RECENT_FIRST:
-                Collections.sort(allTasks, new Task.TaskRecentComparator());
-                break;
-            case OLD_FIRST:
-                Collections.sort(allTasks, new Task.TaskOldComparator());
-                break;
-            case NONE:
-                break;
-        }
-        showOrHideList(allTasks);
-        adapter.updateTasks(allTasks);
-    }
-
-    private void showOrHideList(List<Task> tasks) {
-        if (tasks.isEmpty()) {
+        if (allTasks.isEmpty()) {
             lblNoTasks.setVisibility(View.VISIBLE);
             listTasks.setVisibility(View.GONE);
         } else {
             lblNoTasks.setVisibility(View.GONE);
             listTasks.setVisibility(View.VISIBLE);
+            switch (sortMethod) {
+                case ALPHABETICAL:
+                    Collections.sort(allTasks, new Task.TaskAZComparator());
+                    break;
+                case ALPHABETICAL_INVERTED:
+                    Collections.sort(allTasks, new Task.TaskZAComparator());
+                    break;
+                case RECENT_FIRST:
+                    Collections.sort(allTasks, new Task.TaskRecentComparator());
+                    break;
+                case OLD_FIRST:
+                    Collections.sort(allTasks, new Task.TaskOldComparator());
+                    break;
+                case NONE:
+                    break;
+            }
         }
+        adapter.updateTasks(allTasks);
     }
 
     /**

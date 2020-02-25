@@ -17,16 +17,11 @@ public class EmployeeDataRepository {
         this.employeeDao = employeeDao;
     }
 
-
     public void createEmployee(Employee employee){
         employeeDao.insert(employee);
     }
 
-    public LiveData<Employee> getEmployee(int employeeId){
-        return employeeDao.getEmployee(employeeId);
-    }
-
-    public LiveData<List<Employee>> getEmployees(){
-        return employeeDao.getEmployees();
+    public LiveData<Employee> getEmployee(String email, String password){
+        return employeeDao.getEmployee(email, password);
     }
 }
