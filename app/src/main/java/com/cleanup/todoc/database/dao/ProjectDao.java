@@ -17,7 +17,7 @@ import java.util.List;
 @Dao
 public interface ProjectDao {
     @Query("SELECT * FROM Project WHERE id = :projectId")
-    LiveData<Project> getProject(long projectId);
+    Project getProjectById(long projectId);
 
     @Query("SELECT * FROM Project")
     LiveData<List<Project>> getAllProjects();
@@ -29,9 +29,9 @@ public interface ProjectDao {
     void insertProject(Project project);
 
     @Query("SELECT color FROM Project WHERE id = :id")
-    LiveData<Integer> getProjectColor(long id);
+    Integer getProjectColor(long id);
 
     @Query("SELECT name FROM Project WHERE id = :id")
-    LiveData<String> getProjectName(long id);
+    String getProjectName(long id);
 
 }

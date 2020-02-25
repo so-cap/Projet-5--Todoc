@@ -10,8 +10,12 @@ import com.cleanup.todoc.repositories.EmployeeDataRepository;
 import com.cleanup.todoc.repositories.ProjectDataRepository;
 import com.cleanup.todoc.repositories.TaskDataRepository;
 
+import java.sql.CallableStatement;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * Created by SOPHIE on 21/02/2020.
@@ -61,21 +65,10 @@ public class TaskViewModel extends ViewModel {
     // FOR PROJECT
     // -------------
 
-        public void createProject(final Project project){
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    projectDataSource.createProject(project);
-                }
-            });
-    }
-
-    // TODO: peut être  à supprimer
-   /* public LiveData<List<Project>> getAllProjects(){
+    public LiveData<List<Project>> getAllProjects(){
         return projectDataSource.getAllProjects();
     }
 
-    */
 
     // -------------
     // FOR TASK

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cleanup.todoc.R;
+import com.cleanup.todoc.TaskViewModel;
 import com.cleanup.todoc.database.TodocDatabase;
 import com.cleanup.todoc.database.dao.ProjectDao;
 import com.cleanup.todoc.model.Project;
@@ -164,6 +165,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             } else {
                 imgProject.setVisibility(View.INVISIBLE);
                 lblProjectName.setText("");
+
             }
 
         }

@@ -1,6 +1,8 @@
 package com.cleanup.todoc.model;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 /**
@@ -14,6 +16,7 @@ public class Employee {
     private String lastname;
     private String email;
     private String password;
+    private int taskId;
 
     public Employee(int id, String firstname, String lastname, String email, String password) {
         this.id = id;
@@ -61,5 +64,13 @@ public class Employee {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setTaskId(int taskId){
+        this.taskId = taskId;
+    }
+
+    public int getTaskId() {
+        return taskId;
     }
 }

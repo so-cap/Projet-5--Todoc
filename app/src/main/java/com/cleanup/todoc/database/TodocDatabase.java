@@ -68,7 +68,8 @@ public abstract class TodocDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-
+            for (int i = 0; i < 3; i++)
+                projectDao.insertProject(Project.getAllProjects()[i]);
             return null;
         }
     }

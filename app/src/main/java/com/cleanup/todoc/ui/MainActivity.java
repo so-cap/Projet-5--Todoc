@@ -56,7 +56,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     /**
      * List of all projects available in the application
      */
-    private final Project[] allProjects = Project.getAllProjects();
+    private Project[] allProjects;
+
     private List<Employee> employees = new ArrayList<>();
 
     /**
@@ -116,9 +117,9 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         setContentView(R.layout.activity_main);
 
-        this.deleteDatabase("TodocDatabase.db");
+        //this.deleteDatabase("TodocDatabase.db");
         configureViewModel();
-        loginEmployee();
+        //loginEmployee();
 
         enteredId = dummyEmployeeId;
 
@@ -127,13 +128,11 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listTasks.setAdapter(adapter);
+
         taskViewModel.createEmployee(Injection.getDummyEmployee());
 
-        for (int i = 0; i < 3; i++)
-            taskViewModel.createProject(Project.getAllProjects()[i]);
 
-
-        taskViewModel.getTasks(currentEmployeeId).observe(this, new Observer<List<Task>>() {
+        taskViewModel.getTasks(dummyEmployeeId).observe(this, new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> tasks) {
                 allTasks = tasks;
@@ -153,6 +152,13 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             }
         });
 
+        taskViewModel.getAllProjects().observe(this, new Observer<List<Project>>() {
+            @Override
+            public void onChanged(List<Project> pProjects) {
+                 allProjects = pProjects.toArray(new Project[0]);
+            }
+        });
+
         updateTasks();
 
 
@@ -164,17 +170,16 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         });
     }
 
-    private void loginEmployee() {
+   /* private void loginEmployee() {
         if (employees.contains(Injection.getDummyEmployee())){
             taskViewModel.createEmployee(Injection.getDummyEmployee());
         }
         else {
             currentEmployeeId = enteredId;
-            System.out.println("here");
         }
     }
+    */
 
-    // TODO : mieux comprendre le fonctionnement du ViewModelFactory
     private void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
         taskViewModel = new ViewModelProvider(this, viewModelFactory).get(TaskViewModel.class);
@@ -240,9 +245,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 Task task = new Task();
                 task.setName(taskName);
                 task.setProjectId(taskProject.getId());
-                task.setEmployeeId(currentEmployeeId);
+                task.setEmployeeId(dummyEmployeeId);
                 task.setCreationTimestamp(new Date().getTime());
-
 
                 addTask(task);
 
