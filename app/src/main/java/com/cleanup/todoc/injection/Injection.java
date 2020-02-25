@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
  * Created by SOPHIE on 21/02/2020.
  */
 public class Injection {
+    private static Employee employee = new Employee(0,"Sophie","Cap", "sophie@email.com", "mdp" );
 
     public static EmployeeDataRepository provideEmployeeDataSource(Context context) {
         TodocDatabase database = TodocDatabase.getInstance(context);
@@ -44,6 +45,6 @@ public class Injection {
 
 
     public static Employee getDummyEmployee(){
-        return new Employee(1,"Sophie","Cap", "sophie@email.com", "mdp" );
+        return employee;
     }
 }

@@ -68,10 +68,7 @@ public abstract class TodocDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            employeeDao.createEmployee(new Employee(1, "Sophie", "Cap", "sophie@email.com", "mdp"));
 
-            for (int i = 0; i < 3; i++)
-                projectDao.insertProject(Project.getAllProjects()[i]);
             return null;
         }
     }

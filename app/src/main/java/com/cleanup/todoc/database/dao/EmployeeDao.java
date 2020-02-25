@@ -17,7 +17,7 @@ import java.util.List;
 public interface EmployeeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void createEmployee(Employee employee);
+    void insert(Employee employee);
 
     @Query("SELECT * FROM Employee WHERE id = :employeeId")
     LiveData<Employee> getEmployee(int employeeId);

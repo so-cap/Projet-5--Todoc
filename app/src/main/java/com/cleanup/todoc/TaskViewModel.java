@@ -22,7 +22,7 @@ public class TaskViewModel extends ViewModel {
     private final EmployeeDataRepository employeeDataSource;
     private final Executor executor;
 
-    private LiveData<Employee> currentEmployee;
+    private Employee currentEmployee;
 
     public TaskViewModel(EmployeeDataRepository employeeDataSource, ProjectDataRepository projectDataSource,
                          TaskDataRepository taskDataSource, Executor executor) {
@@ -40,15 +40,35 @@ public class TaskViewModel extends ViewModel {
         return employeeDataSource.getEmployee(id);
     }
 
-    public void initEmployee(LiveData<Employee> currentEmployee) {
+    public LiveData<List<Employee>> getEmployees() {
+        return employeeDataSource.getEmployees();
+    }
+
+    public void initEmployee(Employee currentEmployee) {
         this.currentEmployee = currentEmployee;
+    }
+
+    public void createEmployee(final Employee employee) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                employeeDataSource.createEmployee(employee);
+            }
+        });
     }
 
     // -------------
     // FOR PROJECT
     // -------------
 
-    //  public void createProject(Project project){ projectDataSource.createProject(project); }
+        public void createProject(final Project project){
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    projectDataSource.createProject(project);
+                }
+            });
+    }
 
     // TODO: peut être  à supprimer
    /* public LiveData<List<Project>> getAllProjects(){

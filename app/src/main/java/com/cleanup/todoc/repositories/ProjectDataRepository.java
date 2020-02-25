@@ -17,12 +17,11 @@ public class ProjectDataRepository {
         this.projectDao = projectDao;
     }
 
-   /* public void createProject(Project project){
+   public void createProject(Project project){
         projectDao.insertProject(project);
     }
 
     public LiveData<List<Project>> getAllProjects(){
         return projectDao.getAllProjects();
     }
-    */
 }

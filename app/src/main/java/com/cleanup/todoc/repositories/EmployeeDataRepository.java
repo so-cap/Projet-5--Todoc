@@ -19,7 +19,7 @@ public class EmployeeDataRepository {
 
 
     public void createEmployee(Employee employee){
-        employeeDao.createEmployee(employee);
+        employeeDao.insert(employee);
     }
 
     public LiveData<Employee> getEmployee(int employeeId){
