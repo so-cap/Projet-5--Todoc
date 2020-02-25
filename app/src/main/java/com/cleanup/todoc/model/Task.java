@@ -59,25 +59,6 @@ public class Task {
      */
     private long creationTimestamp;
 
-    /*
-     * Instantiates a new Task.
-     *
-     * @param id                the unique identifier of the task to set
-     * @param projectId         the unique identifier of the project associated to the task to set
-     * @param id        the unique identifier of the task associated to the project
-     * @param name              the name of the task to set
-     * @param creationTimestamp the timestamp when the task has been created to set
-     */
- /*   public Task(long id, long projectId,@NonNull String name, long creationTimestamp) {
-        this.setId(id);
-        this.setProjectId(projectId);
-        this.setEmployeeId(employeeId);
-        this.setName(name);
-        this.setCreationTimestamp(creationTimestamp);
-    }
-
-  */
-
     public Task()
     {}
 

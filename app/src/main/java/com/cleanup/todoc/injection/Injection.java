@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.cleanup.todoc.ViewModelFactory;
 import com.cleanup.todoc.database.TodocDatabase;
-import com.cleanup.todoc.model.Employee;
 import com.cleanup.todoc.repositories.EmployeeDataRepository;
 import com.cleanup.todoc.repositories.ProjectDataRepository;
 import com.cleanup.todoc.repositories.TaskDataRepository;
