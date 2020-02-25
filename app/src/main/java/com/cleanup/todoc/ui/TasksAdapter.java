@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cleanup.todoc.R;
+import com.cleanup.todoc.TaskViewModel;
 import com.cleanup.todoc.database.TodocDatabase;
 import com.cleanup.todoc.database.dao.ProjectDao;
 import com.cleanup.todoc.model.Project;
@@ -77,10 +78,6 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         return tasks.size();
     }
 
-    public void setTasks(List<Task> tasks){
-        this.tasks = tasks;
-    }
-
     /**
      * Listener for deleting tasks
      */
@@ -90,7 +87,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
          *
          * @param  id the task that needs to be deleted
          */
-        void onDeleteTask(long id);
+        void onDeleteTask(int id);
     }
 
     /**
@@ -140,6 +137,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             lblProjectName = itemView.findViewById(R.id.lbl_project_name);
             imgDelete = itemView.findViewById(R.id.img_delete);
 
+            // TODO: gerer la suppression
             imgDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -167,6 +165,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             } else {
                 imgProject.setVisibility(View.INVISIBLE);
                 lblProjectName.setText("");
+
             }
 
         }

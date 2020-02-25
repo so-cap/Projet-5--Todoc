@@ -1,38 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:background="@drawable/ic_launcher_background">
 
-    <TextView
-        android:id="@+id/lbl_no_task"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:drawableTop="@drawable/ic_work_off"
-        android:gravity="center_horizontal"
-        android:text="@string/no_task"
-        android:textSize="22sp"
-        tools:visibility="gone" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list_tasks"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="88dp"
-        tools:itemCount="5"
-        tools:listitem="@layout/item_task" />
+        android:layout_height="match_parent">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_task"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:contentDescription="@string/add_task"
-        app:srcCompat="@drawable/ic_add" />
-</RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp">
+
+            <EditText
+                android:id="@+id/email_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/white"
+                android:fontFamily="sans-serif-light"
+                android:hint="@string/email_hint"
+                android:inputType="textEmailAddress"
+                android:imeOptions="actionNext"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:textSize="17sp"
+                android:importantForAutofill="no" />
+
+            <EditText
+                android:id="@+id/password_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/email_input"
+                android:layout_marginTop="30dp"
+                android:backgroundTint="@android:color/white"
+                android:fontFamily="sans-serif-light"
+                android:hint="@string/password_hint"
+                android:inputType="textPassword"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:textSize="17sp"
+                android:importantForAutofill="no" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/sign_in_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/sign_up_btn"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/button_white"
+            android:text="@string/sign_in_btn"
+            android:textColor="@color/colorPrimary" />
+
+        <Button
+            android:id="@+id/sign_up_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/button_red"
+            android:text="@string/sign_up_btn"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

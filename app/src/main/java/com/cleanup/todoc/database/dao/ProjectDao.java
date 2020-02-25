@@ -15,15 +15,15 @@ import java.util.List;
  */
 @Dao
 public interface ProjectDao {
-    @Query("SELECT * FROM Project WHERE id = :projectId")
-    LiveData<Project> getProject(long projectId);
 
-  /*  @Query("SELECT * FROM Project")
+    @Insert
+    void insertProject(Project project);
+
+    @Query("SELECT * FROM Project")
     LiveData<List<Project>> getAllProjects();
 
     @Query("SELECT * FROM Task WHERE projectId = :projectId AND employeeId = :employeeId")
     LiveData<List<Task>> getTasksByProject(long projectId, int employeeId);
-*/
-    @Insert
-    void insertProject(Project project);
+
+
 }

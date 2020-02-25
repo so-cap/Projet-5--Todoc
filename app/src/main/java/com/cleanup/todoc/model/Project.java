@@ -2,8 +2,10 @@ package com.cleanup.todoc.model;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
+import androidx.annotation.Nullable;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 /**
@@ -86,7 +88,7 @@ public class Project {
 
    */
 
-    /**
+     /**
      * Returns the unique identifier of the project.
      *
      * @return the unique identifier of the project

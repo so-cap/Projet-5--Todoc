@@ -1,8 +1,8 @@
 package com.cleanup.todoc.database.dao;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
@@ -25,24 +25,15 @@ public interface TaskDao {
     void update(Task task);
 
     @Query("DELETE FROM Task WHERE id = :id")
-    void delete(long id);
+    void delete(int id);
 
     @Query("DELETE FROM Task")
     void deleteAllTasks();
 
-    @Query("SELECT * FROM Task")
-    LiveData<List<Task>> getTasks();
+    @Query("DELETE FROM Task WHERE employeeId = :employeeId")
+    void deleteAllTasks(int employeeId);
 
-    @Query("SELECT * FROM Task ORDER BY creationTimestamp DESC")
-    LiveData<List<Task>> getTasksByMostRecentOrder();
-
-    @Query("SELECT * FROM Task ORDER BY creationTimestamp ASC")
-    LiveData<List<Task>> getTasksByLessRecentOrder();
-
-    @Query("SELECT * FROM Task ORDER BY name ASC")
-    LiveData<List<Task>> getTasksByAscendingOrder();
-
-    @Query("SELECT * FROM Task ORDER BY name DESC")
-    LiveData<List<Task>> getTasksByDescendingOrder();
+    @Query("SELECT * FROM Task WHERE employeeId = :employeeId")
+    LiveData<List<Task>> getTasks(int employeeId);
 
 }

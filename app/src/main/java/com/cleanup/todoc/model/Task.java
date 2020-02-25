@@ -3,9 +3,9 @@ package com.cleanup.todoc.model;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
-import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.cleanup.todoc.database.dao.ProjectDao;
@@ -21,7 +21,14 @@ import java.util.Comparator;
  * @author Sophie
  */
 
-@Entity
+@Entity(foreignKeys = {
+        @ForeignKey(entity = Project.class,
+        parentColumns = "id",
+        childColumns = "projectId"),
+
+        @ForeignKey(entity = Employee.class,
+        parentColumns = "id",
+        childColumns = "employeeId")})
 public class Task {
     /**
      * The unique identifier of the task
@@ -33,7 +40,11 @@ public class Task {
      * The unique identifier of the project associated to the task
      * and the identifier of the employee logged in.
      */
+    @ColumnInfo(index = true)
     private long projectId;
+
+    @ColumnInfo(index = true)
+    private int employeeId;
 
     /**
      * The name of the task
@@ -51,6 +62,7 @@ public class Task {
     /*
      * Instantiates a new Task.
      *
+     * @param id                the unique identifier of the task to set
      * @param projectId         the unique identifier of the project associated to the task to set
      * @param id        the unique identifier of the task associated to the project
      * @param name              the name of the task to set
@@ -59,6 +71,7 @@ public class Task {
  /*   public Task(long id, long projectId,@NonNull String name, long creationTimestamp) {
         this.setId(id);
         this.setProjectId(projectId);
+        this.setEmployeeId(employeeId);
         this.setName(name);
         this.setCreationTimestamp(creationTimestamp);
     }
@@ -80,7 +93,7 @@ public class Task {
     /**
      * Sets the unique identifier of the task.
      *
-     * @param id the unique identifier of the task to set
+     * @param id the unique idenifier of the task to set
      */
     public void setId(int id) {
         this.id = id;
@@ -99,6 +112,13 @@ public class Task {
         return projectId;
     }
 
+    public int getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
+    }
 
     /**
      * Returns the project associated to the task.

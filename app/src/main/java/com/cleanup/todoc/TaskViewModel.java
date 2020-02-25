@@ -1,17 +1,17 @@
 package com.cleanup.todoc;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.cleanup.todoc.injection.Injection;
+import com.cleanup.todoc.model.Employee;
+import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
+import com.cleanup.todoc.repositories.EmployeeDataRepository;
 import com.cleanup.todoc.repositories.ProjectDataRepository;
 import com.cleanup.todoc.repositories.TaskDataRepository;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+
 import java.util.concurrent.Executor;
 
 /**
@@ -20,34 +20,48 @@ import java.util.concurrent.Executor;
 public class TaskViewModel extends ViewModel {
     private final TaskDataRepository taskDataSource;
     private final ProjectDataRepository projectDataSource;
+    private final EmployeeDataRepository employeeDataSource;
     private final Executor executor;
 
-    public TaskViewModel(ProjectDataRepository projectDataSource,
+    public TaskViewModel(EmployeeDataRepository employeeDataSource, ProjectDataRepository projectDataSource,
                          TaskDataRepository taskDataSource, Executor executor) {
+        this.employeeDataSource = employeeDataSource;
         this.projectDataSource = projectDataSource;
         this.taskDataSource = taskDataSource;
         this.executor = executor;
     }
 
     // -------------
+    // FOR EMPLOYEE
+    // -------------
+
+    public LiveData<Employee> getEmployee(String email, String password) {
+        return employeeDataSource.getEmployee(email, password);
+    }
+
+    public void createEmployee(final Employee employee) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                employeeDataSource.createEmployee(employee);
+            }
+        });
+    }
+
+    // -------------
     // FOR PROJECT
     // -------------
 
-    //  public void createProject(Project project){ projectDataSource.createProject(project); }
-
-    // TODO: peut être  à supprimer
-   /* public LiveData<List<Project>> getAllProjects(){
+    public LiveData<List<Project>> getAllProjects() {
         return projectDataSource.getAllProjects();
     }
-
-    */
 
     // -------------
     // FOR TASK
     // -------------
 
-    public LiveData<List<Task>> getTasks() {
-        return taskDataSource.getTasks();
+    public LiveData<List<Task>> getTasks(int employeeId) {
+        return taskDataSource.getTasks(employeeId);
     }
 
     public void createTask(final Task task) {
@@ -59,29 +73,13 @@ public class TaskViewModel extends ViewModel {
         });
     }
 
-    public void deleteTask(final long taskId) {
+    public void deleteTask(final int taskId) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 taskDataSource.deleteTask(taskId);
             }
         });
-    }
-
-    public LiveData<List<Task>> tasksInAZOrder(){
-            return Transformations.switchMap(taskDataSource.getTasks(), tasks -> taskDataSource.tasksInAZOrder());
-    }
-
-    public LiveData<List<Task>> tasksInZAOrder() {
-            return taskDataSource.tasksInZAOrder();
-    }
-
-    public LiveData<List<Task>> tasksByMostRecent() {
-            return taskDataSource.tasksByMostRecent();
-    }
-
-    public LiveData<List<Task>> tasksByLessRecent() {
-            return taskDataSource.tasksByLessRecent();
     }
 
 }
