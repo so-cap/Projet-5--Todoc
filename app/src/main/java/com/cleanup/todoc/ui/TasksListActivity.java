@@ -8,10 +8,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,7 +30,10 @@ import android.widget.Toast;
 
 import com.cleanup.todoc.R;
 import com.cleanup.todoc.TaskViewModel;
+import com.cleanup.todoc.ViewModelFactory;
 import com.cleanup.todoc.injection.DI;
+import com.cleanup.todoc.injection.Injection;
+import com.cleanup.todoc.model.Employee;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
@@ -50,7 +55,7 @@ import static com.cleanup.todoc.ui.MainActivity.EMPLOYEE_ID_EXTRA;
  */
 public class TasksListActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener, DialogInterface.OnShowListener, DialogInterface.OnDismissListener {
     private TaskViewModel taskViewModel;
-    private int currentEmployeeId;
+    private int currentEmployeeId = DI.getDummyEmployees().get(0).getId();
 
     /**
      * List of all projects available in the application
@@ -110,6 +115,7 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
     Toolbar mainToolbar;
     Context context;
     ProgressDialog progressDialog;
+    int i;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -118,7 +124,11 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
         ButterKnife.bind(this);
         setSupportActionBar(mainToolbar);
 
-        taskViewModel = (TaskViewModel) DI.getViewModel();
+        if (DI.getViewModel() != null)
+            taskViewModel = (TaskViewModel) DI.getViewModel();
+        else
+            configureViewModelForTests();
+
         context = this;
 
         listTasks = findViewById(R.id.list_tasks);
@@ -127,7 +137,7 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listTasks.setAdapter(adapter);
 
-        if(getIntent().hasExtra(EMPLOYEE_ID_EXTRA))
+        if (getIntent().hasExtra(EMPLOYEE_ID_EXTRA))
             currentEmployeeId = getIntent().getIntExtra(EMPLOYEE_ID_EXTRA, -1);
 
         progressDialog = new ProgressDialog(this);
@@ -210,9 +220,8 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
                 progressDialog.dismiss();
                 Toast.makeText(context, "Utilisateur supprimé!", Toast.LENGTH_LONG).show();
             }
-        },1000);
+        }, 1000);
     }
-
 
 
     @Override
@@ -243,11 +252,7 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
             }
             // If both project and name of the task have been set
             else if (taskProject != null) {
-                Task task = new Task();
-                task.setName(taskName);
-                task.setProjectId(taskProject.getId());
-                task.setEmployeeId(currentEmployeeId);
-                task.setCreationTimestamp(new Date().getTime());
+                Task task = new Task(0, taskProject.getId(), currentEmployeeId, taskName, new Date().getTime());
 
                 addTask(task);
 
@@ -271,8 +276,6 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
      */
     private void addTask(@NonNull Task task) {
         taskViewModel.createTask(task);
-        lblNoTasks.setVisibility(View.GONE);
-        listTasks.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -400,5 +403,10 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
         NONE
     }
 
-
+    @VisibleForTesting
+    public void configureViewModelForTests() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
+        taskViewModel = new ViewModelProvider(this, viewModelFactory).get(TaskViewModel.class);
+        DI.setViewModel(taskViewModel);
+    }
 }

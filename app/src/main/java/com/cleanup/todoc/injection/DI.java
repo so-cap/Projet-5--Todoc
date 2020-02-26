@@ -16,7 +16,7 @@ import java.util.List;
 public class DI {
     private static ViewModel viewModel;
     private static List<Employee> dummyEmployee =
-            Arrays.asList(new Employee(0, "Sophie", "Cap", "sophie@email.com", "mdp"),
+            Arrays.asList(new Employee(1, "Sophie", "Cap", "sophie@email.com", "mdp"),
             new Employee(0, "John", "Doe", "john@email.com", "mdp"));
 
     public static List<Employee> getDummyEmployees() {

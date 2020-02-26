@@ -1,16 +1,32 @@
 package com.cleanup.todoc;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.room.Database;
+import androidx.room.Room;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Looper;
 import android.view.View;
 import android.widget.TextView;
 
+import com.cleanup.todoc.database.TodocDatabase;
+import com.cleanup.todoc.injection.DI;
+import com.cleanup.todoc.injection.Injection;
+import com.cleanup.todoc.model.Employee;
+import com.cleanup.todoc.model.Task;
+import com.cleanup.todoc.ui.MainActivity;
 import com.cleanup.todoc.ui.TasksListActivity;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.logging.Handler;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -27,21 +43,37 @@ import static org.junit.Assert.assertThat;
  *
  * @author Gaëtan HERFRAY
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ *
+ *
+ *
+ * Tests modification
+ * @author Sophie Ca
  */
 @RunWith(AndroidJUnit4.class)
 public class TasksListActivityInstrumentedTest {
+    private TasksListActivity activity;
+    private Employee dummyEmployee = DI.getDummyEmployees().get(0);
+
     @Rule
     public ActivityTestRule<TasksListActivity> rule = new ActivityTestRule<>(TasksListActivity.class);
 
+    @Before
+    public void setup() {
+        activity = rule.getActivity();
+
+        TaskViewModel viewModel = (TaskViewModel) DI.getViewModel();
+        viewModel.createEmployee(dummyEmployee);
+    }
+
     @Test
     public void addAndRemoveTask() {
-        TasksListActivity activity = rule.getActivity();
         TextView lblNoTask = activity.findViewById(R.id.lbl_no_task);
         RecyclerView listTasks = activity.findViewById(R.id.list_tasks);
 
         onView(withId(R.id.fab_add_task)).perform(click());
         onView(withId(R.id.txt_task_name)).perform(replaceText("Tâche example"));
         onView(withId(android.R.id.button1)).perform(click());
+
 
         // Check that lblTask is not displayed anymore
         assertThat(lblNoTask.getVisibility(), equalTo(View.GONE));
@@ -60,8 +92,6 @@ public class TasksListActivityInstrumentedTest {
 
     @Test
     public void sortTasks() {
-        TasksListActivity activity = rule.getActivity();
-
         onView(withId(R.id.fab_add_task)).perform(click());
         onView(withId(R.id.txt_task_name)).perform(replaceText("aaa Tâche example"));
         onView(withId(android.R.id.button1)).perform(click());
