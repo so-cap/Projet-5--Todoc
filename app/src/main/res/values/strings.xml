@@ -22,7 +22,7 @@
     <string name="sign_up_btn">S\'inscrire</string>
     <string name="logout_menu">logout</string>
     <string name="logout_btn">Se déconnecter</string>
-    <string name="new_employee">Nouveau profil</string>
+    <string name="new_employee">"Nouveau profil "</string>
     <string name="lastname">Nom</string>
     <string name="firstname">Prénom</string>
     <string name="save_profil">Enregistrer</string>

@@ -2,7 +2,7 @@ package com.cleanup.todoc.injection;
 
 import android.content.Context;
 
-import com.cleanup.todoc.ViewModelFactory;
+import com.cleanup.todoc.utils.ViewModelFactory;
 import com.cleanup.todoc.database.TodocDatabase;
 import com.cleanup.todoc.repositories.EmployeeDataRepository;
 import com.cleanup.todoc.repositories.ProjectDataRepository;

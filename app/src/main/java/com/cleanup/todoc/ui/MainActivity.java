@@ -12,14 +12,12 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.cleanup.todoc.R;
 import com.cleanup.todoc.TaskViewModel;
-import com.cleanup.todoc.ViewModelFactory;
+import com.cleanup.todoc.utils.ViewModelFactory;
 import com.cleanup.todoc.injection.DI;
 import com.cleanup.todoc.injection.Injection;
 import com.cleanup.todoc.model.Employee;
@@ -54,8 +52,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        //this.deleteDatabase("TodocDatabase.db");
-
         context = this;
         configureViewModel();
         DI.setViewModel(viewModel);
@@ -69,6 +65,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         viewModel.createEmployee(DI.getDummyEmployees().get(0));
         viewModel.createEmployee(DI.getDummyEmployees().get(1));
 
+    }
+
+    private void startTaskActivity() {
+        Toast.makeText(context, "Bienvenue " + currentEmployee.getFirstname() + " ! :)", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(MainActivity.this, TasksListActivity.class);
+        intent.putExtra(EMPLOYEE_ID_EXTRA, currentEmployee.getId());
+        startActivity(intent);
+        finish();
     }
 
     private void signInOrSignUp() {
@@ -108,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
             startActivity(intent);
         }
-
     }
 
     private void observeEmployee() {

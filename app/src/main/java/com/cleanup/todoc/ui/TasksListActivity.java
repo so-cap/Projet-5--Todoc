@@ -30,10 +30,9 @@ import android.widget.Toast;
 
 import com.cleanup.todoc.R;
 import com.cleanup.todoc.TaskViewModel;
-import com.cleanup.todoc.ViewModelFactory;
+import com.cleanup.todoc.utils.ViewModelFactory;
 import com.cleanup.todoc.injection.DI;
 import com.cleanup.todoc.injection.Injection;
-import com.cleanup.todoc.model.Employee;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
@@ -55,7 +54,7 @@ import static com.cleanup.todoc.ui.MainActivity.EMPLOYEE_ID_EXTRA;
  */
 public class TasksListActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener, DialogInterface.OnShowListener, DialogInterface.OnDismissListener {
     private TaskViewModel taskViewModel;
-    private int currentEmployeeId = DI.getDummyEmployees().get(0).getId();
+    private int currentEmployeeId = DI.getDemoEmployee().getId();
 
     /**
      * List of all projects available in the application
@@ -115,7 +114,6 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
     Toolbar mainToolbar;
     Context context;
     ProgressDialog progressDialog;
-    int i;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -194,7 +192,7 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
         } else if (id == R.id.logout_btn) {
             backToHomePage();
         } else if (id == R.id.delete_account) {
-            deleteAccount();
+            showAlertBuilder();
         }
 
         if (id == R.id.filter_alphabetical || id == R.id.filter_alphabetical_inverted
@@ -221,6 +219,31 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
                 Toast.makeText(context, "Utilisateur supprimé!", Toast.LENGTH_LONG).show();
             }
         }, 1000);
+    }
+
+
+    private void showAlertBuilder(){
+        final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this, R.style.Dialog);
+        alertBuilder.setTitle("SUPPRESSION DE COMPTE");
+        alertBuilder.setMessage("Souhaitez-vous poursuivre la suppression de votre compte ?");
+        alertBuilder.setPositiveButton("CONFIRMER", null);
+        alertBuilder.setNegativeButton("RETOUR", null);
+        final AlertDialog popUp = alertBuilder.create();
+
+        popUp.show();
+        popUp.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteAccount();
+            }
+        });
+
+        popUp.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popUp.dismiss();
+            }
+        });
     }
 
 
@@ -276,6 +299,8 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
      */
     private void addTask(@NonNull Task task) {
         taskViewModel.createTask(task);
+        lblNoTasks.setVisibility(View.GONE);
+        listTasks.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -344,6 +369,15 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
     }
 
     @Override
+    public void onDismiss(DialogInterface dialog) {
+        if (dialog == newTaskDialog) {
+            dialogEditText = null;
+            dialogSpinner = null;
+            newTaskDialog = null;
+        }
+    }
+
+    @Override
     public void onShow(DialogInterface dialogInterface) {
         if (newTaskDialog != null) {
             Button button = newTaskDialog.getButton(AlertDialog.BUTTON_POSITIVE);
@@ -354,15 +388,6 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
                     onTaskDialogPositiveButtonClick(newTaskDialog);
                 }
             });
-        }
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        if (dialog == newTaskDialog) {
-            dialogEditText = null;
-            dialogSpinner = null;
-            newTaskDialog = null;
         }
     }
 

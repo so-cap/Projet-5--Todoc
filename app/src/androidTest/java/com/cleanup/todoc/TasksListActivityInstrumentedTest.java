@@ -21,6 +21,7 @@ import com.cleanup.todoc.model.Task;
 import com.cleanup.todoc.ui.MainActivity;
 import com.cleanup.todoc.ui.TasksListActivity;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,7 +53,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(AndroidJUnit4.class)
 public class TasksListActivityInstrumentedTest {
     private TasksListActivity activity;
-    private Employee dummyEmployee = DI.getDummyEmployees().get(0);
+    private Employee dummyEmployee = DI.getDemoEmployee();
 
     @Rule
     public ActivityTestRule<TasksListActivity> rule = new ActivityTestRule<>(TasksListActivity.class);
@@ -149,4 +150,5 @@ public class TasksListActivityInstrumentedTest {
         onView(withRecyclerView(R.id.list_tasks).atPositionOnView(2, R.id.lbl_task_name))
                 .check(matches(withText("aaa Tâche example")));
     }
+
 }
