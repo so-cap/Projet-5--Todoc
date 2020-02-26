@@ -1,14 +1,17 @@
 package com.cleanup.todoc.ui;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,13 +24,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cleanup.todoc.R;
 import com.cleanup.todoc.TaskViewModel;
-import com.cleanup.todoc.ViewModelFactory;
 import com.cleanup.todoc.injection.DI;
-import com.cleanup.todoc.injection.Injection;
-import com.cleanup.todoc.model.Employee;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
@@ -36,7 +37,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static com.cleanup.todoc.MainActivity.EMPLOYEE_ID_EXTRA;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static com.cleanup.todoc.ui.MainActivity.EMPLOYEE_ID_EXTRA;
 
 /**
  * <p>Home activity of the application which is displayed when the user opens the app.</p>
@@ -102,14 +106,20 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
     @SuppressWarnings("NullableProblems")
     @NonNull
     private TextView lblNoTasks;
+    @BindView(R.id.my_toolbar)
+    Toolbar mainToolbar;
+    Context context;
+    ProgressDialog progressDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_tasks_list);
+        ButterKnife.bind(this);
+        setSupportActionBar(mainToolbar);
 
         taskViewModel = (TaskViewModel) DI.getViewModel();
+        context = this;
 
         listTasks = findViewById(R.id.list_tasks);
         lblNoTasks = findViewById(R.id.lbl_no_task);
@@ -119,6 +129,9 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
 
         if(getIntent().hasExtra(EMPLOYEE_ID_EXTRA))
             currentEmployeeId = getIntent().getIntExtra(EMPLOYEE_ID_EXTRA, -1);
+
+        progressDialog = new ProgressDialog(this);
+        DI.initProgressDialog(progressDialog);
 
         observeTasks();
         initProjects();
@@ -168,6 +181,10 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
             sortMethod = SortMethod.OLD_FIRST;
         } else if (id == R.id.filter_recent_first) {
             sortMethod = SortMethod.RECENT_FIRST;
+        } else if (id == R.id.logout_btn) {
+            backToHomePage();
+        } else if (id == R.id.delete_account) {
+            deleteAccount();
         }
 
         if (id == R.id.filter_alphabetical || id == R.id.filter_alphabetical_inverted
@@ -176,6 +193,27 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void backToHomePage() {
+        Intent intent = new Intent(TasksListActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void deleteAccount() {
+        progressDialog.show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                taskViewModel.deleteEmployee(currentEmployeeId);
+                backToHomePage();
+                progressDialog.dismiss();
+                Toast.makeText(context, "Utilisateur supprimé!", Toast.LENGTH_LONG).show();
+            }
+        },1000);
+    }
+
+
 
     @Override
     public void onDeleteTask(int id) {

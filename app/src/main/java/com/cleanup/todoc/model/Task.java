@@ -12,6 +12,8 @@ import com.cleanup.todoc.database.dao.ProjectDao;
 
 import java.util.Comparator;
 
+import static androidx.room.ForeignKey.CASCADE;
+
 /**
  * <p>Model for the tasks of the application.</p>
  *
@@ -23,12 +25,12 @@ import java.util.Comparator;
 
 @Entity(foreignKeys = {
         @ForeignKey(entity = Project.class,
-        parentColumns = "id",
-        childColumns = "projectId"),
-
-        @ForeignKey(entity = Employee.class,
-        parentColumns = "id",
-        childColumns = "employeeId")})
+                parentColumns = "id",
+                childColumns = "projectId"),
+        @ForeignKey(onDelete = CASCADE,
+                entity = Employee.class,
+                parentColumns = "id",
+                childColumns = "employeeId")})
 public class Task {
     /**
      * The unique identifier of the task
@@ -59,8 +61,8 @@ public class Task {
      */
     private long creationTimestamp;
 
-    public Task()
-    {}
+    public Task() {
+    }
 
     /**
      * Returns the unique identifier of the task.

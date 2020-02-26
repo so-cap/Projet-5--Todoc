@@ -20,4 +20,12 @@
     <string name="password_hint">Mot de passe</string>
     <string name="sign_in_btn">Se connecter</string>
     <string name="sign_up_btn">S\'inscrire</string>
+    <string name="logout_menu">logout</string>
+    <string name="logout_btn">Se déconnecter</string>
+    <string name="new_employee">Nouveau profil</string>
+    <string name="lastname">Nom</string>
+    <string name="firstname">Prénom</string>
+    <string name="save_profil">Enregistrer</string>
+    <string name="cancel_profil_creation">Annuler</string>
+    <string name="delete_account">Supprimer mon compte</string>
 </resources>

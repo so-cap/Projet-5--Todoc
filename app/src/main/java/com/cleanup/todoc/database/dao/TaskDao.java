@@ -20,15 +20,8 @@ public interface TaskDao {
     @Insert
     void insert(Task task);
 
-    //TODO: research how exactly it updates the data
-    @Update
-    void update(Task task);
-
     @Query("DELETE FROM Task WHERE id = :id")
     void delete(int id);
-
-    @Query("DELETE FROM Task")
-    void deleteAllTasks();
 
     @Query("DELETE FROM Task WHERE employeeId = :employeeId")
     void deleteAllTasks(int employeeId);

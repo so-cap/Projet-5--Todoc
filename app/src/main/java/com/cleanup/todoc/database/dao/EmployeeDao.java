@@ -2,6 +2,7 @@ package com.cleanup.todoc.database.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -21,4 +22,7 @@ public interface EmployeeDao {
 
     @Query("SELECT * FROM Employee WHERE email = :email AND password = :password")
     LiveData<Employee> getEmployee(String email, String password);
+
+    @Query("DELETE FROM Employee WHERE id = :employeeId")
+    void deleteEmployee(int employeeId);
 }

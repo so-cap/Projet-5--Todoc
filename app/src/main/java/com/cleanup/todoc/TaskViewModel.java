@@ -48,6 +48,15 @@ public class TaskViewModel extends ViewModel {
         });
     }
 
+    public void deleteEmployee(final int employeeId) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                employeeDataSource.deleteEmployee(employeeId);
+            }
+        });
+    }
+
     // -------------
     // FOR PROJECT
     // -------------

@@ -24,4 +24,8 @@ public class EmployeeDataRepository {
     public LiveData<Employee> getEmployee(String email, String password){
         return employeeDao.getEmployee(email, password);
     }
+
+    public void deleteEmployee(int employeeId) {
+        employeeDao.deleteEmployee(employeeId);
+    }
 }

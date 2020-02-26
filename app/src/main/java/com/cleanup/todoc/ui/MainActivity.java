@@ -1,4 +1,4 @@
-package com.cleanup.todoc;
+package com.cleanup.todoc.ui;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -12,13 +12,17 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.cleanup.todoc.R;
+import com.cleanup.todoc.TaskViewModel;
+import com.cleanup.todoc.ViewModelFactory;
 import com.cleanup.todoc.injection.DI;
 import com.cleanup.todoc.injection.Injection;
 import com.cleanup.todoc.model.Employee;
-import com.cleanup.todoc.ui.TasksListActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,12 +61,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DI.setViewModel(viewModel);
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage("Connexion...");
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setProgress(0);
+        DI.initProgressDialog(progressDialog);
 
         signInBtn.setOnClickListener(this);
+        signUpBtn.setOnClickListener(this);
 
         viewModel.createEmployee(DI.getDummyEmployees().get(0));
         viewModel.createEmployee(DI.getDummyEmployees().get(1));
@@ -103,8 +105,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }, 1000);
         } else {
-            Toast.makeText(context, "Inscription !", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
+            startActivity(intent);
         }
+
     }
 
     private void observeEmployee() {

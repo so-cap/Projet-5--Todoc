@@ -62,14 +62,6 @@ public class Project {
         };
     }
 
-    public static Project getProjectById(long id) {
-        for(int i = 0; i < 3; i++){
-            if (getAllProjects()[i].getId() == id)
-                return getAllProjects()[i];
-        }
-        return null;
-    }
-
     /**
      * Returns the project with the given unique identifier, or null if no project with that
      * identifier can be found.
@@ -77,7 +69,7 @@ public class Project {
      * @param id the unique identifier of the project to return
      * @return the project with the given unique identifier, or null if it has not been found
      */
-  /*  @Nullable
+    @Nullable
     public static Project getProjectById(long id) {
         for (Project project : getAllProjects()) {
             if (project.id == id)
@@ -85,8 +77,6 @@ public class Project {
         }
         return null;
     }
-
-   */
 
      /**
      * Returns the unique identifier of the project.

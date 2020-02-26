@@ -25,10 +25,6 @@ public class TaskDataRepository {
      taskDao.delete(id);
     }
 
-    public void deleteAllTasks(int employeeId){
-        taskDao.deleteAllTasks(employeeId);
-    }
-
     public LiveData<List<Task>> getTasks(int employeeId){
         return taskDao.getTasks(employeeId);
     }

@@ -1,5 +1,8 @@
 package com.cleanup.todoc.injection;
 
+import android.app.ProgressDialog;
+import android.media.tv.TvContract;
+
 import androidx.lifecycle.ViewModel;
 
 import com.cleanup.todoc.model.Employee;
@@ -26,5 +29,12 @@ public class DI {
 
     public static ViewModel getViewModel() {
         return viewModel;
+    }
+
+    public static void initProgressDialog(ProgressDialog progressDialog){
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Chargement...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setProgress(0);
     }
 }

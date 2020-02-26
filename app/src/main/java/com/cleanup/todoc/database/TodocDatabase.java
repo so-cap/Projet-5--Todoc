@@ -56,13 +56,9 @@ public abstract class TodocDatabase extends RoomDatabase {
     }
 
     private static class PopulateDBAsyncTask extends AsyncTask<Void, Void, Void>{
-        private EmployeeDao employeeDao;
         private ProjectDao projectDao;
-        private TaskDao taskDao;
 
         private PopulateDBAsyncTask(TodocDatabase db) {
-            employeeDao = db.employeeDao();
-            taskDao = db.taskDao();
             projectDao = db.projectDao();
         }
 

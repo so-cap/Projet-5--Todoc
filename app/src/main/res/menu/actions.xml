@@ -29,4 +29,22 @@
         </menu>
     </item>
 
+    <item
+        android:id="@+id/logout_menu"
+        android:icon="@drawable/ic_more_vert_white_24dp"
+        android:title="@string/logout_menu"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/logout_btn"
+                android:title="@string/logout_btn"
+                app:showAsAction="never|withText" />
+            <item
+                android:id="@+id/delete_account"
+                android:title="@string/delete_account"
+                app:showAsAction="never|withText" />
+        </menu>
+
+    </item>
+
 </menu>

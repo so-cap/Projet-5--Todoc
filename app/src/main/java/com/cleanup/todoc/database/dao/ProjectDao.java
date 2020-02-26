@@ -6,7 +6,6 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 import com.cleanup.todoc.model.Project;
-import com.cleanup.todoc.model.Task;
 
 import java.util.List;
 
@@ -21,9 +20,4 @@ public interface ProjectDao {
 
     @Query("SELECT * FROM Project")
     LiveData<List<Project>> getAllProjects();
-
-    @Query("SELECT * FROM Task WHERE projectId = :projectId AND employeeId = :employeeId")
-    LiveData<List<Task>> getTasksByProject(long projectId, int employeeId);
-
-
 }
