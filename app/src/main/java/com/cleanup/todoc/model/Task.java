@@ -23,6 +23,7 @@ import static androidx.room.ForeignKey.CASCADE;
  * @author Sophie
  */
 
+// TODO : verifier l'utilité du onDelete = CASCADE
 @Entity(foreignKeys = {
         @ForeignKey(entity = Project.class,
                 parentColumns = "id",
@@ -51,8 +52,6 @@ public class Task {
     /**
      * The name of the task
      */
-    // Suppress warning because setName is called in constructor
-    @SuppressWarnings("NullableProblems")
     @NonNull
     private String name;
 
