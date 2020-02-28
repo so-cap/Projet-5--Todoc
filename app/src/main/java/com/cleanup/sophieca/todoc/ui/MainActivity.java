@@ -15,12 +15,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.cleanup.sophieca.todoc.R;
 import com.cleanup.sophieca.todoc.TaskViewModel;
 import com.cleanup.sophieca.todoc.injection.DI;
 import com.cleanup.sophieca.todoc.injection.Injection;
 import com.cleanup.sophieca.todoc.model.Employee;
 import com.cleanup.sophieca.todoc.utils.ViewModelFactory;
-import com.cleanup.todoc.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
