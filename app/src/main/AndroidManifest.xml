@@ -12,14 +12,14 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".sophieca.ui.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.TasksListActivity" />
-        <activity android:name=".ui.SignUpActivity" />
+        <activity android:name=".sophieca.ui.TasksListActivity" />
+        <activity android:name=".sophieca.ui.SignUpActivity" />
     </application>
 </manifest>
