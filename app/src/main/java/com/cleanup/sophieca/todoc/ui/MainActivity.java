@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void observeEmployee() {
-        viewModel.getEmployee(emailEmployee, passwordEmployee).observe(this, new Observer<Employee>() {
+        viewModel.getEmployee(emailEmployee.toLowerCase().trim(), passwordEmployee).observe(this, new Observer<Employee>() {
             @Override
             public void onChanged(Employee employee) {
                 CURRENT_EMPLOYEE = employee;
