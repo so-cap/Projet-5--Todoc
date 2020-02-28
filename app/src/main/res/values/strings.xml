@@ -33,4 +33,6 @@
     <string name="confirm_btn_text">CONFIRMER</string>
     <string name="cancel_delete">RETOUR</string>
     <string name="user_deleted">Utilisateur supprimé!</string>
+    <string name="welcome">"Bienvenue "</string>
+    <string name="user_unrecognised">Utilisateur non reconnu !</string>
 </resources>

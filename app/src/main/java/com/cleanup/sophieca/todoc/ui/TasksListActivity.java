@@ -44,6 +44,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.cleanup.sophieca.todoc.ui.MainActivity.CURRENT_EMPLOYEE;
 import static com.cleanup.sophieca.todoc.ui.MainActivity.EMPLOYEE_ID_EXTRA;
 
 /**
@@ -361,6 +362,7 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
     }
 
     private void backToHomePage() {
+        CURRENT_EMPLOYEE = null;
         Intent intent = new Intent(TasksListActivity.this, MainActivity.class);
         startActivity(intent);
         finish();

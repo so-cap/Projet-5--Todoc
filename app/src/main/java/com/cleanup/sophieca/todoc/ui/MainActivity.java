@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private TaskViewModel viewModel;
     public static String EMPLOYEE_ID_EXTRA = "employee id";
-    private Employee currentEmployee;
+    public static Employee CURRENT_EMPLOYEE = null;
     private String emailEmployee;
     private String passwordEmployee;
     public Context context;
@@ -50,12 +50,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        configureViewModel();
+        DI.setViewModel(viewModel);
         ButterKnife.bind(this);
 
         context = this;
-        configureViewModel();
-        DI.setViewModel(viewModel);
-
         progressDialog = new ProgressDialog(this);
         DI.initProgressDialog(progressDialog);
 
@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         viewModel.createEmployee(DI.getDummyEmployees().get(0));
         viewModel.createEmployee(DI.getDummyEmployees().get(1));
 
+        if (CURRENT_EMPLOYEE != null)
+            startTaskActivity();
     }
 
     private void signInOrSignUp() {
@@ -88,9 +90,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (currentEmployee == null) {
-                        Toast.makeText(context, "Utilisateur non reconnu!", Toast.LENGTH_LONG).show();
+                    if (CURRENT_EMPLOYEE == null) {
+                        Toast.makeText(context, context.getString(R.string.user_unrecognised), Toast.LENGTH_LONG).show();
                     } else {
+                        Toast.makeText(context, context.getString(R.string.welcome) +
+                                CURRENT_EMPLOYEE.getFirstname() + " ! :)", Toast.LENGTH_SHORT).show();
                         startTaskActivity();
                     }
                     progressDialog.dismiss();
@@ -106,15 +110,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         viewModel.getEmployee(emailEmployee, passwordEmployee).observe(this, new Observer<Employee>() {
             @Override
             public void onChanged(Employee employee) {
-                currentEmployee = employee;
+                CURRENT_EMPLOYEE = employee;
             }
         });
     }
 
     private void startTaskActivity() {
-        Toast.makeText(context, "Bienvenue " + currentEmployee.getFirstname() + " ! :)", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(MainActivity.this, TasksListActivity.class);
-        intent.putExtra(EMPLOYEE_ID_EXTRA, currentEmployee.getId());
+        intent.putExtra(EMPLOYEE_ID_EXTRA, CURRENT_EMPLOYEE.getId());
         startActivity(intent);
         finish();
     }
