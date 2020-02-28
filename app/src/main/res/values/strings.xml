@@ -28,4 +28,9 @@
     <string name="save_profil">Enregistrer</string>
     <string name="cancel_profil_creation">Annuler</string>
     <string name="delete_account">Supprimer mon compte</string>
+    <string name="delete_account_title">SUPPRESSION DE COMPTE</string>
+    <string name="confirm_delete">Souhaitez-vous poursuivre la suppression de votre compte ?</string>
+    <string name="confirm_btn_text">CONFIRMER</string>
+    <string name="cancel_delete">RETOUR</string>
+    <string name="user_deleted">Utilisateur supprimé!</string>
 </resources>

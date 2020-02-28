@@ -171,85 +171,73 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.actions, menu);
-        return true;
+    /**
+     * Shows the Dialog for adding a Task
+     */
+    private void showAddTaskDialog() {
+        final AlertDialog dialog = getAddTaskDialog();
+
+        dialog.show();
+
+        dialogEditText = dialog.findViewById(R.id.txt_task_name);
+        dialogSpinner = dialog.findViewById(R.id.project_spinner);
+
+        populateDialogSpinner();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.filter_alphabetical) {
-            sortMethod = SortMethod.ALPHABETICAL;
-        } else if (id == R.id.filter_alphabetical_inverted) {
-            sortMethod = SortMethod.ALPHABETICAL_INVERTED;
-        } else if (id == R.id.filter_oldest_first) {
-            sortMethod = SortMethod.OLD_FIRST;
-        } else if (id == R.id.filter_recent_first) {
-            sortMethod = SortMethod.RECENT_FIRST;
-        } else if (id == R.id.logout_btn) {
-            backToHomePage();
-        } else if (id == R.id.delete_account) {
-            showAlertBuilder();
+    /**
+     * Sets the data of the Spinner with projects to associate to a new task
+     */
+    private void populateDialogSpinner() {
+        final ArrayAdapter<Project> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, allProjects);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        if (dialogSpinner != null) {
+            dialogSpinner.setAdapter(adapter);
         }
-
-        if (id == R.id.filter_alphabetical || id == R.id.filter_alphabetical_inverted
-                || id == R.id.filter_oldest_first || id == R.id.filter_recent_first)
-            updateTasks();
-
-        return super.onOptionsItemSelected(item);
     }
 
-    private void backToHomePage() {
-        Intent intent = new Intent(TasksListActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    private void deleteAccount() {
-        progressDialog.show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                taskViewModel.deleteEmployee(currentEmployeeId);
-                backToHomePage();
-                progressDialog.dismiss();
-                Toast.makeText(context, "Utilisateur supprimé!", Toast.LENGTH_LONG).show();
-            }
-        }, 1000);
-    }
-
-
-    private void showAlertBuilder(){
+    /**
+     * Returns the newTaskDialog allowing the user to create a new task.
+     *
+     * @return the newTaskDialog allowing the user to create a new task
+     */
+    @NonNull
+    private AlertDialog getAddTaskDialog() {
         final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this, R.style.Dialog);
-        alertBuilder.setTitle("SUPPRESSION DE COMPTE");
-        alertBuilder.setMessage("Souhaitez-vous poursuivre la suppression de votre compte ?");
-        alertBuilder.setPositiveButton("CONFIRMER", null);
-        alertBuilder.setNegativeButton("RETOUR", null);
-        final AlertDialog popUp = alertBuilder.create();
+        alertBuilder.setTitle(R.string.add_task);
+        alertBuilder.setView(R.layout.dialog_add_task);
+        alertBuilder.setPositiveButton(R.string.add, null);
+        alertBuilder.setOnDismissListener(this);
 
-        popUp.show();
-        popUp.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteAccount();
-            }
-        });
+        newTaskDialog = alertBuilder.create();
 
-        popUp.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popUp.dismiss();
-            }
-        });
+        // This instead of listener to positive button in order to avoid automatic dismiss
+        newTaskDialog.setOnShowListener(this);
+
+        return newTaskDialog;
     }
-
 
     @Override
-    public void onDeleteTask(int id) {
-        taskViewModel.deleteTask(id);
+    public void onDismiss(DialogInterface dialog) {
+        if (dialog == newTaskDialog) {
+            dialogEditText = null;
+            dialogSpinner = null;
+            newTaskDialog = null;
+        }
+    }
+
+    @Override
+    public void onShow(DialogInterface dialogInterface) {
+        if (newTaskDialog != null) {
+            Button button = newTaskDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            button.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    onTaskDialogPositiveButtonClick(newTaskDialog);
+                }
+            });
+        }
     }
 
     /**
@@ -303,21 +291,46 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
         listTasks.setVisibility(View.VISIBLE);
     }
 
-    /**
-     * Shows the Dialog for adding a Task
-     */
-    private void showAddTaskDialog() {
-        final AlertDialog dialog = getAddTaskDialog();
 
-        dialog.show();
-
-        dialogEditText = dialog.findViewById(R.id.txt_task_name);
-        dialogSpinner = dialog.findViewById(R.id.project_spinner);
-
-        populateDialogSpinner();
+    @Override
+    public void onDeleteTask(int id) {
+        taskViewModel.deleteTask(id);
     }
 
-    /*
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.actions, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.filter_alphabetical) {
+            sortMethod = SortMethod.ALPHABETICAL;
+        } else if (id == R.id.filter_alphabetical_inverted) {
+            sortMethod = SortMethod.ALPHABETICAL_INVERTED;
+        } else if (id == R.id.filter_oldest_first) {
+            sortMethod = SortMethod.OLD_FIRST;
+        } else if (id == R.id.filter_recent_first) {
+            sortMethod = SortMethod.RECENT_FIRST;
+        } else if (id == R.id.logout_btn) {
+            backToHomePage();
+        } else if (id == R.id.delete_account) {
+            showAlertBuilder();
+        }
+
+        if (id == R.id.filter_alphabetical || id == R.id.filter_alphabetical_inverted
+                || id == R.id.filter_oldest_first || id == R.id.filter_recent_first)
+            updateTasks();
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    /**
      * Updates the list of tasks in the UI
      */
     private void updateTasks() {
@@ -347,62 +360,51 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
         adapter.updateTasks(allTasks);
     }
 
-    /**
-     * Returns the newTaskDialog allowing the user to create a new task.
-     *
-     * @return the newTaskDialog allowing the user to create a new task
-     */
-    @NonNull
-    private AlertDialog getAddTaskDialog() {
+    private void backToHomePage() {
+        Intent intent = new Intent(TasksListActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+
+    private void showAlertBuilder(){
         final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this, R.style.Dialog);
-        alertBuilder.setTitle(R.string.add_task);
-        alertBuilder.setView(R.layout.dialog_add_task);
-        alertBuilder.setPositiveButton(R.string.add, null);
-        alertBuilder.setOnDismissListener(this);
+        alertBuilder.setTitle(getString(R.string.delete_account_title));
+        alertBuilder.setMessage(getString(R.string.confirm_delete));
+        alertBuilder.setPositiveButton(getString(R.string.confirm_btn_text), null);
+        alertBuilder.setNegativeButton(getString(R.string.cancel_delete), null);
+        final AlertDialog popUp = alertBuilder.create();
 
-        newTaskDialog = alertBuilder.create();
+        popUp.show();
+        popUp.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteAccount();
+            }
+        });
 
-        // This instead of listener to positive button in order to avoid automatic dismiss
-        newTaskDialog.setOnShowListener(this);
-
-        return newTaskDialog;
+        popUp.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popUp.dismiss();
+            }
+        });
     }
 
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        if (dialog == newTaskDialog) {
-            dialogEditText = null;
-            dialogSpinner = null;
-            newTaskDialog = null;
-        }
-    }
-
-    @Override
-    public void onShow(DialogInterface dialogInterface) {
-        if (newTaskDialog != null) {
-            Button button = newTaskDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            button.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View view) {
-                    onTaskDialogPositiveButtonClick(newTaskDialog);
-                }
-            });
-        }
+    private void deleteAccount() {
+        progressDialog.show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                taskViewModel.deleteEmployee(currentEmployeeId);
+                backToHomePage();
+                progressDialog.dismiss();
+                Toast.makeText(context, getString(R.string.user_deleted), Toast.LENGTH_LONG).show();
+            }
+        }, 1000);
     }
 
     /**
-     * Sets the data of the Spinner with projects to associate to a new task
-     */
-    private void populateDialogSpinner() {
-        final ArrayAdapter<Project> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, allProjects);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        if (dialogSpinner != null) {
-            dialogSpinner.setAdapter(adapter);
-        }
-    }
-
-    /*
      * List of all possible sort methods for task
      */
     private enum SortMethod {

@@ -67,14 +67,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void startTaskActivity() {
-        Toast.makeText(context, "Bienvenue " + currentEmployee.getFirstname() + " ! :)", Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(MainActivity.this, TasksListActivity.class);
-        intent.putExtra(EMPLOYEE_ID_EXTRA, currentEmployee.getId());
-        startActivity(intent);
-        finish();
-    }
-
     private void signInOrSignUp() {
         emailEmployee = emailInput.getText().toString();
         passwordEmployee = passwordInput.getText().toString();
@@ -99,11 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (currentEmployee == null) {
                         Toast.makeText(context, "Utilisateur non reconnu!", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(context, "Bienvenue " + currentEmployee.getFirstname() + " ! :)", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(MainActivity.this, TasksListActivity.class);
-                        intent.putExtra(EMPLOYEE_ID_EXTRA, currentEmployee.getId());
-                        startActivity(intent);
-                        finish();
+                        startTaskActivity();
                     }
                     progressDialog.dismiss();
                 }
@@ -121,5 +109,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 currentEmployee = employee;
             }
         });
+    }
+
+    private void startTaskActivity() {
+        Toast.makeText(context, "Bienvenue " + currentEmployee.getFirstname() + " ! :)", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(MainActivity.this, TasksListActivity.class);
+        intent.putExtra(EMPLOYEE_ID_EXTRA, currentEmployee.getId());
+        startActivity(intent);
+        finish();
     }
 }
