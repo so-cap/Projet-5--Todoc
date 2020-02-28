@@ -28,13 +28,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cleanup.sophieca.todoc.R;
 import com.cleanup.sophieca.todoc.TaskViewModel;
 import com.cleanup.sophieca.todoc.injection.DI;
 import com.cleanup.sophieca.todoc.injection.Injection;
 import com.cleanup.sophieca.todoc.model.Project;
 import com.cleanup.sophieca.todoc.model.Task;
 import com.cleanup.sophieca.todoc.utils.ViewModelFactory;
-import com.cleanup.todoc.R;
 
 import java.util.ArrayList;
 import java.util.Collections;

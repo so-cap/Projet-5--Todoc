@@ -10,10 +10,10 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cleanup.sophieca.todoc.R;
 import com.cleanup.sophieca.todoc.TaskViewModel;
 import com.cleanup.sophieca.todoc.injection.DI;
 import com.cleanup.sophieca.todoc.model.Employee;
-import com.cleanup.todoc.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

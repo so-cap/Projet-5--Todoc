@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.cleanup.sophieca.todoc.R;
 import com.cleanup.sophieca.todoc.model.Project;
 import com.cleanup.sophieca.todoc.model.Task;
-import com.cleanup.todoc.R;
 
 import java.util.List;
 
