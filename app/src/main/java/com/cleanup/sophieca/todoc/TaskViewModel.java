@@ -48,6 +48,15 @@ public class TaskViewModel extends ViewModel {
         });
     }
 
+    public void updateEmployee(Employee employee){
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                employeeDataSource.updateEmployee(employee);
+            }
+        });
+    }
+
     public void deleteEmployee(final int employeeId) {
         executor.execute(new Runnable() {
             @Override

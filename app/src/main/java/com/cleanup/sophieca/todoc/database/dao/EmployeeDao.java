@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.cleanup.sophieca.todoc.model.Employee;
 
@@ -16,6 +17,9 @@ public interface EmployeeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Employee employee);
+
+    @Update
+    void update(Employee employee);
 
     @Query("SELECT * FROM Employee WHERE email = :email AND password = :password")
     LiveData<Employee> getEmployee(String email, String password);

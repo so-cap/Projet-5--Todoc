@@ -12,6 +12,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.cleanup.sophieca.todoc.database.dao.EmployeeDao;
 import com.cleanup.sophieca.todoc.database.dao.ProjectDao;
 import com.cleanup.sophieca.todoc.database.dao.TaskDao;
+import com.cleanup.sophieca.todoc.injection.DI;
 import com.cleanup.sophieca.todoc.model.Employee;
 import com.cleanup.sophieca.todoc.model.Project;
 import com.cleanup.sophieca.todoc.model.Task;
@@ -57,15 +58,20 @@ public abstract class TodocDatabase extends RoomDatabase {
 
     private static class PopulateDBAsyncTask extends AsyncTask<Void, Void, Void>{
         private ProjectDao projectDao;
+        private EmployeeDao employeeDao;
 
         private PopulateDBAsyncTask(TodocDatabase db) {
             projectDao = db.projectDao();
+            employeeDao = db.employeeDao();
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
             for (int i = 0; i < 3; i++)
                 projectDao.insertProject(Project.getAllProjects()[i]);
+
+            employeeDao.insert(DI.getDummyEmployees().get(0));
+            employeeDao.insert(DI.getDummyEmployees().get(1));
             return null;
         }
     }

@@ -319,8 +319,6 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
             sortMethod = SortMethod.RECENT_FIRST;
         } else if (id == R.id.logout_btn) {
             backToHomePage();
-        } else if (id == R.id.delete_account) {
-            showAlertBuilder();
         }
 
         if (id == R.id.filter_alphabetical || id == R.id.filter_alphabetical_inverted
@@ -362,46 +360,15 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
     }
 
     private void backToHomePage() {
-        CURRENT_EMPLOYEE = null;
-        Intent intent = new Intent(TasksListActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-
-    private void showAlertBuilder(){
-        final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this, R.style.Dialog);
-        alertBuilder.setTitle(getString(R.string.delete_account_title));
-        alertBuilder.setMessage(getString(R.string.confirm_delete));
-        alertBuilder.setPositiveButton(getString(R.string.confirm_btn_text), null);
-        alertBuilder.setNegativeButton(getString(R.string.cancel_delete), null);
-        final AlertDialog popUp = alertBuilder.create();
-
-        popUp.show();
-        popUp.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteAccount();
-            }
-        });
-
-        popUp.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popUp.dismiss();
-            }
-        });
-    }
-
-    private void deleteAccount() {
         progressDialog.show();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                taskViewModel.deleteEmployee(currentEmployeeId);
-                backToHomePage();
+                CURRENT_EMPLOYEE = null;
+                Intent intent = new Intent(TasksListActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
                 progressDialog.dismiss();
-                Toast.makeText(context, getString(R.string.user_deleted), Toast.LENGTH_LONG).show();
             }
         }, 1000);
     }

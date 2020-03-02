@@ -31,6 +31,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private TaskViewModel viewModel;
     public static String EMPLOYEE_ID_EXTRA = "employee id";
+    public static String EMPLOYEE_EXTRA = "employee object";
     public static Employee CURRENT_EMPLOYEE = null;
     private String emailEmployee;
     private String passwordEmployee;
@@ -43,8 +44,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText passwordInput;
     @BindView(R.id.sign_in_btn)
     Button signInBtn;
-    @BindView(R.id.sign_up_btn)
-    Button signUpBtn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,13 +59,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DI.initProgressDialog(progressDialog);
 
         signInBtn.setOnClickListener(this);
-        signUpBtn.setOnClickListener(this);
-
-        viewModel.createEmployee(DI.getDummyEmployees().get(0));
-        viewModel.createEmployee(DI.getDummyEmployees().get(1));
 
         if (CURRENT_EMPLOYEE != null)
-            startTaskActivity();
+            startNextActivity();
     }
 
     private void signInOrSignUp() {
@@ -83,27 +78,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.sign_in_btn) {
-            signInOrSignUp();
-            observeEmployee();
-            progressDialog.show();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (CURRENT_EMPLOYEE == null) {
-                        Toast.makeText(context, context.getString(R.string.user_unrecognised), Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(context, context.getString(R.string.welcome) +
-                                CURRENT_EMPLOYEE.getFirstname() + " ! :)", Toast.LENGTH_SHORT).show();
-                        startTaskActivity();
-                    }
-                    progressDialog.dismiss();
-                }
-            }, 1000);
-        } else {
-            Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
-            startActivity(intent);
-        }
+        signInOrSignUp();
+        observeEmployee();
+        progressDialog.show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (CURRENT_EMPLOYEE == null)
+                    Toast.makeText(context, context.getString(R.string.user_unrecognised), Toast.LENGTH_LONG).show();
+                else
+                    startNextActivity();
+                progressDialog.dismiss();
+            }
+        }, 1000);
     }
 
     private void observeEmployee() {
@@ -115,10 +102,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void startTaskActivity() {
-        Intent intent = new Intent(MainActivity.this, TasksListActivity.class);
-        intent.putExtra(EMPLOYEE_ID_EXTRA, CURRENT_EMPLOYEE.getId());
-        startActivity(intent);
-        finish();
+    private void startNextActivity() {
+        Intent intent;
+
+        if (CURRENT_EMPLOYEE.isNew()) {
+            intent = new Intent(MainActivity.this, ChangePasswordActivity.class);
+            intent.putExtra(EMPLOYEE_EXTRA, CURRENT_EMPLOYEE);
+            startActivity(intent);
+        } else {
+            intent = new Intent(MainActivity.this, TasksListActivity.class);
+            intent.putExtra(EMPLOYEE_ID_EXTRA, CURRENT_EMPLOYEE.getId());
+            startActivity(intent);
+            finish();
+            Toast.makeText(context, context.getString(R.string.welcome) +
+                    CURRENT_EMPLOYEE.getFirstname() + " ! :)", Toast.LENGTH_SHORT).show();
+        }
     }
 }

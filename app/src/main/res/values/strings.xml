@@ -22,7 +22,7 @@
     <string name="sign_up_btn">S\'inscrire</string>
     <string name="logout_menu">logout</string>
     <string name="logout_btn">Se déconnecter</string>
-    <string name="new_employee">"Nouveau profil "</string>
+    <string name="first_connection">"Première connexion "</string>
     <string name="lastname">Nom</string>
     <string name="firstname">Prénom</string>
     <string name="save_profil">Enregistrer</string>
@@ -35,4 +35,6 @@
     <string name="user_deleted">Utilisateur supprimé!</string>
     <string name="welcome">"Bienvenue "</string>
     <string name="user_unrecognised">Utilisateur non reconnu !</string>
+    <string name="confirm_password">Retapez le mot de passe</string>
+    <string name="change_password">Veuillez changer votre mot de passe:</string>
 </resources>

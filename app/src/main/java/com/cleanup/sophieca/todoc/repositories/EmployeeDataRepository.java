@@ -23,6 +23,10 @@ public class EmployeeDataRepository {
         return employeeDao.getEmployee(email, password);
     }
 
+    public void updateEmployee(Employee employee){
+        employeeDao.update(employee);
+    }
+
     public void deleteEmployee(int employeeId) {
         employeeDao.deleteEmployee(employeeId);
     }

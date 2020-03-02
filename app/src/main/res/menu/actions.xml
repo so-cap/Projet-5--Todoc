@@ -39,10 +39,6 @@
                 android:id="@+id/logout_btn"
                 android:title="@string/logout_btn"
                 app:showAsAction="never|withText" />
-            <item
-                android:id="@+id/delete_account"
-                android:title="@string/delete_account"
-                app:showAsAction="never|withText" />
         </menu>
 
     </item>
