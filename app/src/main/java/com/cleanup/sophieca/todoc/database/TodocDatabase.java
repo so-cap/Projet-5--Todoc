@@ -70,6 +70,11 @@ public abstract class TodocDatabase extends RoomDatabase {
 
             employeeDao.insert(DI.getDummyEmployees().get(0));
             employeeDao.insert(DI.getDummyEmployees().get(1));
+
+            Employee employee = DI.getDummyEmployees().get(2);
+            employee.setAdmin(true);
+            employee.setFirstConnection(false);
+            employeeDao.insert(employee);
             return null;
         }
     }

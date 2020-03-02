@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.cleanup.sophieca.todoc.TaskViewModel;
+import com.cleanup.sophieca.todoc.TodocViewModel;
 import com.cleanup.sophieca.todoc.repositories.EmployeeDataRepository;
 import com.cleanup.sophieca.todoc.repositories.ProjectDataRepository;
 import com.cleanup.sophieca.todoc.repositories.TaskDataRepository;
@@ -31,8 +31,8 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(TaskViewModel.class)) {
-            return (T) new TaskViewModel(employeeDataSource, projectDataSource, taskDataSource, executor);
+        if (modelClass.isAssignableFrom(TodocViewModel.class)) {
+            return (T) new TodocViewModel(employeeDataSource, projectDataSource, taskDataSource, executor);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

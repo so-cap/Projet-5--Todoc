@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".sophieca.ui.AdminActivity">
+
+    <item
+        android:id="@+id/search_bar_menu"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:title="@string/logout_menu"
+        app:showAsAction="ifRoom">
+    </item>
+
+    <item
+        android:id="@+id/action_filter_admin"
+        android:icon="@drawable/ic_filter_list"
+        android:title="@string/label_action_filter"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/filter_alphabetical_admin"
+                android:title="@string/sort_alphabetical"
+                app:showAsAction="never|withText" />
+            <item
+                android:id="@+id/filter_alphabetical_inverted_admin"
+                android:title="@string/sort_alphabetical_invert"
+                app:showAsAction="never|withText" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/logout_menu_admin"
+        android:icon="@drawable/ic_more_vert_white_24dp"
+        android:title="@string/logout_menu"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/logout_btn_admin"
+                android:title="@string/logout_btn"
+                app:showAsAction="never|withText" />
+        </menu>
+    </item>
+
+</menu>

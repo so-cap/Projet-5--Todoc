@@ -17,14 +17,14 @@ import java.util.concurrent.Executor;
 /**
  * Created by SOPHIE on 21/02/2020.
  */
-public class TaskViewModel extends ViewModel {
+public class TodocViewModel extends ViewModel {
     private final TaskDataRepository taskDataSource;
     private final ProjectDataRepository projectDataSource;
     private final EmployeeDataRepository employeeDataSource;
     private final Executor executor;
 
-    public TaskViewModel(EmployeeDataRepository employeeDataSource, ProjectDataRepository projectDataSource,
-                         TaskDataRepository taskDataSource, Executor executor) {
+    public TodocViewModel(EmployeeDataRepository employeeDataSource, ProjectDataRepository projectDataSource,
+                          TaskDataRepository taskDataSource, Executor executor) {
         this.employeeDataSource = employeeDataSource;
         this.projectDataSource = projectDataSource;
         this.taskDataSource = taskDataSource;
@@ -37,6 +37,10 @@ public class TaskViewModel extends ViewModel {
 
     public LiveData<Employee> getEmployee(String email, String password) {
         return employeeDataSource.getEmployee(email, password);
+    }
+
+    public LiveData<List<Employee>> getEmployees() {
+        return employeeDataSource.getEmployees();
     }
 
     void createEmployee(final Employee employee) {

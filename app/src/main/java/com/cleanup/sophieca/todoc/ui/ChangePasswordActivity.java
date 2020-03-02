@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cleanup.sophieca.todoc.R;
-import com.cleanup.sophieca.todoc.TaskViewModel;
+import com.cleanup.sophieca.todoc.TodocViewModel;
 import com.cleanup.sophieca.todoc.injection.DI;
 import com.cleanup.sophieca.todoc.model.Employee;
 
@@ -23,7 +23,7 @@ import static com.cleanup.sophieca.todoc.ui.MainActivity.EMPLOYEE_EXTRA;
  * Created by SOPHIE on 26/02/2020.
  */
 public class ChangePasswordActivity extends AppCompatActivity implements View.OnClickListener {
-    private TaskViewModel viewModel;
+    private TodocViewModel viewModel;
     private String password;
     private Employee currentEmployee;
 
@@ -39,7 +39,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
         ButterKnife.bind(this);
-        viewModel = (TaskViewModel) DI.getViewModel();
+        viewModel = (TodocViewModel) DI.getViewModel();
 
         if (getIntent().hasExtra(EMPLOYEE_EXTRA)) {
             currentEmployee = (Employee) getIntent().getSerializableExtra(EMPLOYEE_EXTRA);

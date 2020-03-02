@@ -18,6 +18,7 @@ public class Employee implements Serializable {
     private String password;
     private int taskId;
     private boolean firstConnection = true;
+    private boolean isAdmin = false;
 
     public Employee(int id, String firstName, String lastName, String email, String password) {
         this.id = id;
@@ -69,5 +70,13 @@ public class Employee implements Serializable {
 
     public int getTaskId() {
         return taskId;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 }

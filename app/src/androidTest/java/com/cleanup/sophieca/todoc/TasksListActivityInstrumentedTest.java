@@ -48,7 +48,7 @@ public class TasksListActivityInstrumentedTest {
     public void setup() {
         activity = rule.getActivity();
 
-        TaskViewModel viewModel = (TaskViewModel) DI.getViewModel();
+        TodocViewModel viewModel = (TodocViewModel) DI.getViewModel();
         viewModel.createEmployee(dummyEmployee);
     }
 

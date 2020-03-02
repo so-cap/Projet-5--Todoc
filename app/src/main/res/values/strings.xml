@@ -39,4 +39,6 @@
     <string name="empty_field">"Veuillez remplir ce champs!"</string>
     <string name="different_password">"Mots de passe non identiques!"</string>
     <string name="saved_password">"Mot de passe enregistré ! Connectez-vous "</string>
+    <string name="search">Rechercher…</string>
+    <string name="app_title_admin">Todoc - Administrateur</string>
 </resources>

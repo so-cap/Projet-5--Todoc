@@ -26,14 +26,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cleanup.sophieca.todoc.R;
-import com.cleanup.sophieca.todoc.TaskViewModel;
+import com.cleanup.sophieca.todoc.TodocViewModel;
 import com.cleanup.sophieca.todoc.injection.DI;
 import com.cleanup.sophieca.todoc.injection.Injection;
 import com.cleanup.sophieca.todoc.model.Project;
 import com.cleanup.sophieca.todoc.model.Task;
+import com.cleanup.sophieca.todoc.utils.Comparator;
 import com.cleanup.sophieca.todoc.utils.ViewModelFactory;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ import static com.cleanup.sophieca.todoc.ui.MainActivity.EMPLOYEE_ID_EXTRA;
  * @author Gaëtan HERFRAY
  */
 public class TasksListActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener, DialogInterface.OnShowListener, DialogInterface.OnDismissListener {
-    private TaskViewModel taskViewModel;
+    private TodocViewModel viewModel;
     private int currentEmployeeId = DI.getDemoEmployee().getId();
 
     /**
@@ -124,7 +124,7 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
         setSupportActionBar(mainToolbar);
 
         if (DI.getViewModel() != null)
-            taskViewModel = (TaskViewModel) DI.getViewModel();
+            viewModel = (TodocViewModel) DI.getViewModel();
         else
             configureViewModelForTests();
 
@@ -154,7 +154,7 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
     }
 
     private void observeTasks() {
-        taskViewModel.getTasks(currentEmployeeId).observe(this, new Observer<List<Task>>() {
+        viewModel.getTasks(currentEmployeeId).observe(this, new Observer<List<Task>>() {
             @Override
             public void onChanged(final List<Task> tasks) {
                 allTasks = tasks;
@@ -164,7 +164,7 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
     }
 
     private void initProjects() {
-        taskViewModel.getAllProjects().observe(this, new Observer<List<Project>>() {
+        viewModel.getAllProjects().observe(this, new Observer<List<Project>>() {
             @Override
             public void onChanged(List<Project> pProjects) {
                 allProjects = pProjects.toArray(new Project[0]);
@@ -287,7 +287,7 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
      * @param task the task to be added to the list
      */
     private void addTask(@NonNull Task task) {
-        taskViewModel.createTask(task);
+        viewModel.createTask(task);
         lblNoTasks.setVisibility(View.GONE);
         listTasks.setVisibility(View.VISIBLE);
     }
@@ -295,7 +295,7 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
 
     @Override
     public void onDeleteTask(int id) {
-        taskViewModel.deleteTask(id);
+        viewModel.deleteTask(id);
     }
 
 
@@ -341,16 +341,16 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
             listTasks.setVisibility(View.VISIBLE);
             switch (sortMethod) {
                 case ALPHABETICAL:
-                    Collections.sort(allTasks, new Task.TaskAZComparator());
+                    Collections.sort(allTasks, new Comparator.AZComparator());
                     break;
                 case ALPHABETICAL_INVERTED:
-                    Collections.sort(allTasks, new Task.TaskZAComparator());
+                    Collections.sort(allTasks, new Comparator.ZAComparator());
                     break;
                 case RECENT_FIRST:
-                    Collections.sort(allTasks, new Task.TaskRecentComparator());
+                    Collections.sort(allTasks, new Comparator.TaskRecentComparator());
                     break;
                 case OLD_FIRST:
-                    Collections.sort(allTasks, new Task.TaskOldComparator());
+                    Collections.sort(allTasks, new Comparator.TaskOldComparator());
                     break;
                 case NONE:
                     break;
@@ -402,7 +402,7 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
     @VisibleForTesting
     public void configureViewModelForTests() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        taskViewModel = new ViewModelProvider(this, viewModelFactory).get(TaskViewModel.class);
-        DI.setViewModel(taskViewModel);
+        viewModel = new ViewModelProvider(this, viewModelFactory).get(TodocViewModel.class);
+        DI.setViewModel(viewModel);
     }
 }

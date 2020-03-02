@@ -21,5 +21,6 @@
         </activity>
         <activity android:name="com.cleanup.sophieca.todoc.ui.TasksListActivity" />
         <activity android:name="com.cleanup.sophieca.todoc.ui.ChangePasswordActivity" />
+        <activity android:name=".ui.AdminActivity" />
     </application>
 </manifest>

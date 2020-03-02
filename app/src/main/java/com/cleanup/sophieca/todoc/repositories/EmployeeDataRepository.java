@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData;
 import com.cleanup.sophieca.todoc.database.dao.EmployeeDao;
 import com.cleanup.sophieca.todoc.model.Employee;
 
+import java.util.List;
+
 /**
  * Created by SOPHIE on 21/02/2020.
  */
@@ -21,6 +23,10 @@ public class EmployeeDataRepository {
 
     public LiveData<Employee> getEmployee(String email, String password){
         return employeeDao.getEmployee(email, password);
+    }
+
+    public LiveData<List<Employee>> getEmployees(){
+        return employeeDao.getEmployees();
     }
 
     public void updateEmployee(Employee employee){

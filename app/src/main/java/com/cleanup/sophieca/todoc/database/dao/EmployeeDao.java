@@ -9,6 +9,8 @@ import androidx.room.Update;
 
 import com.cleanup.sophieca.todoc.model.Employee;
 
+import java.util.List;
+
 /**
  * Created by SOPHIE on 21/02/2020.
  */
@@ -20,6 +22,9 @@ public interface EmployeeDao {
 
     @Update
     void update(Employee employee);
+
+    @Query("SELECT * FROM Employee")
+    LiveData<List<Employee>> getEmployees();
 
     @Query("SELECT * FROM Employee WHERE email = :email AND password = :password")
     LiveData<Employee> getEmployee(String email, String password);

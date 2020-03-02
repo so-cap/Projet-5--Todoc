@@ -16,7 +16,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.cleanup.sophieca.todoc.R;
-import com.cleanup.sophieca.todoc.TaskViewModel;
+import com.cleanup.sophieca.todoc.TodocViewModel;
 import com.cleanup.sophieca.todoc.injection.DI;
 import com.cleanup.sophieca.todoc.injection.Injection;
 import com.cleanup.sophieca.todoc.model.Employee;
@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
  * Created by SOPHIE on 25/02/2020.
  */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private TaskViewModel viewModel;
+    private TodocViewModel viewModel;
     public static String EMPLOYEE_ID_EXTRA = "employee id";
     public static String EMPLOYEE_EXTRA = "employee object";
     public static Employee CURRENT_EMPLOYEE = null;
@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        deleteDatabase("TodocDatabase.db");
 
         configureViewModel();
         DI.setViewModel(viewModel);
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        viewModel = new ViewModelProvider(this, viewModelFactory).get(TaskViewModel.class);
+        viewModel = new ViewModelProvider(this, viewModelFactory).get(TodocViewModel.class);
     }
 
 
@@ -105,7 +107,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void startNextActivity() {
         Intent intent;
 
-        if (CURRENT_EMPLOYEE.isNew()) {
+        if (CURRENT_EMPLOYEE.isAdmin()){
+            intent = new Intent(MainActivity.this, AdminActivity.class);
+            startActivity(intent);
+            Toast.makeText(context, context.getString(R.string.welcome) +
+                    CURRENT_EMPLOYEE.getFirstName() + " ! ", Toast.LENGTH_SHORT).show();
+        } else if (CURRENT_EMPLOYEE.isNew()) {
             intent = new Intent(MainActivity.this, ChangePasswordActivity.class);
             intent.putExtra(EMPLOYEE_EXTRA, CURRENT_EMPLOYEE);
             startActivity(intent);
@@ -115,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
             finish();
             Toast.makeText(context, context.getString(R.string.welcome) +
-                    CURRENT_EMPLOYEE.getFirstName() + " ! :)", Toast.LENGTH_SHORT).show();
+                    CURRENT_EMPLOYEE.getFirstName() + " ! ", Toast.LENGTH_SHORT).show();
         }
     }
 }
