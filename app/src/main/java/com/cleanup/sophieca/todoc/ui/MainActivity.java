@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
             finish();
             Toast.makeText(context, context.getString(R.string.welcome) +
-                    CURRENT_EMPLOYEE.getFirstname() + " ! :)", Toast.LENGTH_SHORT).show();
+                    CURRENT_EMPLOYEE.getFirstName() + " ! :)", Toast.LENGTH_SHORT).show();
         }
     }
 }

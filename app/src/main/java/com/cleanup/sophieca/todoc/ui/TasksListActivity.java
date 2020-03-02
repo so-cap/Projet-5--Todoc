@@ -381,7 +381,7 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
          * Sort alphabetical by name
          */
         ALPHABETICAL,
-        /*
+        /**
          * Inverted sort alphabetical by name
          */
         ALPHABETICAL_INVERTED,

@@ -1,13 +1,19 @@
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco-android'
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     compileSdkVersion 29
     signingConfigs {
-        // Notice the production keystore and password are not checked in. Signing resources for
-        // release builds are typically stored somewhere more secure than the source repo.
-        // This typically also means that release builds are signed manually rather than by
-        // Gradle.
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file('C:\\Users\\sophi\\Documents\\Openclassrooms\\Projet 5\\keystore-todoc1.jks')
+            storePassword keystoreProperties['storePassword']
+        }
     }
 
     defaultConfig {
@@ -17,11 +23,14 @@ android {
         versionCode 4
         versionName "4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.release
+        manifestPlaceholders = [:]
     }
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources = true
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
@@ -50,11 +59,6 @@ dependencies {
     //BUTTERKNIFE
     implementation 'com.jakewharton:butterknife:10.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
-    //GLIDE
-    implementation 'com.github.bumptech.glide:glide:4.10.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
-    //EASY PERMISSIONS
-    implementation 'pub.devrel:easypermissions:1.1.1'
     //ROOM
     implementation 'androidx.room:room-runtime:2.2.4'
     annotationProcessor 'androidx.room:room-compiler:2.2.4'

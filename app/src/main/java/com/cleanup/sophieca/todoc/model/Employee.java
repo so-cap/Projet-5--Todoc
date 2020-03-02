@@ -12,17 +12,17 @@ import java.io.Serializable;
 public class Employee implements Serializable {
     @PrimaryKey (autoGenerate = true)
     private int id;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
     private int taskId;
     private boolean firstConnection = true;
 
-    public Employee(int id, String firstname, String lastname, String email, String password) {
+    public Employee(int id, String firstName, String lastName, String email, String password) {
         this.id = id;
-        this.firstname = firstname;
-        this.lastname = lastname;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.password = password;
     }
@@ -30,7 +30,7 @@ public class Employee implements Serializable {
     public boolean isNew(){
         return firstConnection;
     }
-    
+
     public void setFirstConnection(boolean firstConnection){
         this.firstConnection = firstConnection;
     }
@@ -45,12 +45,12 @@ public class Employee implements Serializable {
         this.id = id;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
     public String getEmail() {

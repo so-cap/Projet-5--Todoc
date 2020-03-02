@@ -19,12 +19,11 @@
     <string name="email_hint">Email</string>
     <string name="password_hint">Mot de passe</string>
     <string name="sign_in_btn">Se connecter</string>
-    <string name="sign_up_btn">S\'inscrire</string>
     <string name="logout_menu">logout</string>
     <string name="logout_btn">Se déconnecter</string>
     <string name="first_connection">"Première connexion "</string>
-    <string name="lastname">Nom</string>
-    <string name="firstname">Prénom</string>
+    <string name="lastName">Nom</string>
+    <string name="firstName">Prénom</string>
     <string name="save_profil">Enregistrer</string>
     <string name="cancel_profil_creation">Annuler</string>
     <string name="delete_account">Supprimer mon compte</string>
@@ -37,4 +36,7 @@
     <string name="user_unrecognised">Utilisateur non reconnu !</string>
     <string name="confirm_password">Retapez le mot de passe</string>
     <string name="change_password">Veuillez changer votre mot de passe:</string>
+    <string name="empty_field">"Veuillez remplir ce champs!"</string>
+    <string name="different_password">"Mots de passe non identiques!"</string>
+    <string name="saved_password">"Mot de passe enregistré ! Connectez-vous "</string>
 </resources>

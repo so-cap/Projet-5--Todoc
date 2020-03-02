@@ -39,7 +39,7 @@ public class TaskViewModel extends ViewModel {
         return employeeDataSource.getEmployee(email, password);
     }
 
-    public void createEmployee(final Employee employee) {
+    void createEmployee(final Employee employee) {
         executor.execute(new Runnable() {
             @Override
             public void run() {

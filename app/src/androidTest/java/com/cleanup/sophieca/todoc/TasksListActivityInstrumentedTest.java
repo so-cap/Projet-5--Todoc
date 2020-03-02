@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.cleanup.sophieca.todoc.injection.DI;
 import com.cleanup.sophieca.todoc.model.Employee;
 import com.cleanup.sophieca.todoc.ui.TasksListActivity;
-import com.cleanup.todoc.R;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

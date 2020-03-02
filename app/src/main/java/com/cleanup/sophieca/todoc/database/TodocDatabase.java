@@ -25,14 +25,12 @@ public abstract class TodocDatabase extends RoomDatabase {
 
     private static volatile TodocDatabase INSTANCE;
 
-    // TODO: Qu'est-ce que ces déclarations font exactement ?
     public abstract EmployeeDao employeeDao();
     public abstract ProjectDao projectDao();
     public abstract TaskDao taskDao();
 
     public static TodocDatabase getInstance(Context context){
         if(INSTANCE == null){
-            // TODO: A quoi sert synchronized ?
             synchronized (TodocDatabase.class){
                 if (INSTANCE == null){
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),

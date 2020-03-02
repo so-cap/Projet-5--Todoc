@@ -63,7 +63,7 @@ public class DaoTests {
         database.employeeDao().insert(EMPLOYEE_DEMO);
         // TEST
         Employee employee = LiveDataTestUtil.getValue(database.employeeDao().getEmployee(EMPLOYEE_DEMO.getEmail(), EMPLOYEE_DEMO.getPassword()));
-        assertTrue(employee.getFirstname().equals(EMPLOYEE_DEMO.getFirstname()) && employee.getId() == EMPLOYEE_ID);
+        assertTrue(employee.getFirstName().equals(EMPLOYEE_DEMO.getFirstName()) && employee.getId() == EMPLOYEE_ID);
     }
 
     @Test

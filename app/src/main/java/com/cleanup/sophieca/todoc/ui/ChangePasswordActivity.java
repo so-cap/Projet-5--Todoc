@@ -25,7 +25,6 @@ import static com.cleanup.sophieca.todoc.ui.MainActivity.EMPLOYEE_EXTRA;
 public class ChangePasswordActivity extends AppCompatActivity implements View.OnClickListener {
     private TaskViewModel viewModel;
     private String password;
-    private String confirmPassword;
     private Employee currentEmployee;
 
     @BindView(R.id.new_password)
@@ -55,22 +54,22 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
             currentEmployee.setPassword(password);
             currentEmployee.setFirstConnection(false);
             viewModel.updateEmployee(currentEmployee);
-            Toast.makeText(this, "Mot de passe enregistré ! Connectez-vous ", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.saved_password), Toast.LENGTH_LONG).show();
             finish();
         }
     }
 
     private boolean checkEntries() {
         password = passwordInput.getText().toString();
-        confirmPassword = confirmPasswordInput.getText().toString();
+        String confirmPassword = confirmPasswordInput.getText().toString();
 
         if (password.isEmpty() || confirmPassword.isEmpty() || !password.equals(confirmPassword)) {
             if (password.isEmpty())
-                passwordInput.setError("Veuillez remplir ce champs!");
+                passwordInput.setError(getString(R.string.empty_field));
             if (confirmPassword.isEmpty())
-                confirmPasswordInput.setError("Veuillez remplir ce champs!");
+                confirmPasswordInput.setError(getString(R.string.empty_field));
             else if (!password.equals(confirmPassword))
-                confirmPasswordInput.setError("Mot de passe non identique!");
+                confirmPasswordInput.setError(getString(R.string.different_password));
             return false;
         }
         return true;
