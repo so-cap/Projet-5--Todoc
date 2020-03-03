@@ -51,6 +51,10 @@ public class MainActivityInstrumentedTest {
         TextView lblNoTask = activity.findViewById(R.id.lbl_no_task);
         RecyclerView listTasks = activity.findViewById(R.id.list_tasks);
 
+        while (listTasks.getAdapter().getItemCount() > 0)
+            onView(withRecyclerView(R.id.list_tasks).atPositionOnView(0, R.id.img_delete))
+                    .perform(click());
+
         onView(withId(R.id.fab_add_task)).perform(click());
         onView(withId(R.id.txt_task_name)).perform(replaceText("Tâche example"));
         onView(withId(android.R.id.button1)).perform(click());
