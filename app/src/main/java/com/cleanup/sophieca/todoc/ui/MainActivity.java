@@ -170,10 +170,11 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         ArrayList<Task> filteredList = new ArrayList<>();
 
         for (Task task : allTasks) {
-            if (task.getName().toLowerCase().contains(text.toLowerCase()) ||
-                    task.getName().toLowerCase().contains(text.toLowerCase())) {
-                filteredList.add(task);
-            }
+            if (task.getProject() != null)
+                if (task.getProject().getName().toLowerCase().contains(text.toLowerCase()) ||
+                        task.getProject().getName().toLowerCase().contains(text.toLowerCase())) {
+                    filteredList.add(task);
+                }
         }
         adapter.updateTasks(filteredList);
     }
@@ -357,7 +358,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     }
 
     @OnClick
-    public void hideSearchBar(View view){
+    public void hideSearchBar(View view) {
         searchBar.setVisibility(View.GONE);
         searchBarInput.setText("");
         updateTasks();
