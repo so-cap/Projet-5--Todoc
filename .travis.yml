@@ -19,6 +19,8 @@ before_install:
 
 before_script:
   - chmod +x gradlew
+  - chmod +x gradle/wrapper/gradle-wrapper.jar
+  - git add -f gradle/wrapper/gradle-wrapper.jar
   - ./gradlew build jacocoTestReport assembleAndroidTest
   - echo no | android create avd --force -n test -t android-$EMULATOR_API_LEVEL --abi $ANDROID_ABI
   - emulator -avd test -no-skin -no-audio -no-window &
