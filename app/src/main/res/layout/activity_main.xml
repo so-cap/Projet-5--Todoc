@@ -1,94 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="10dp"
-    android:background="@drawable/ic_launcher_background">
-
-  <ScrollView
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.MainActivity">
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/my_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:title="@string/app_name"
+            app:titleTextColor="@android:color/white" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/search_bar_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:hint="@string/search"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/close_search_bar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/close_search_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:onClick="hideSearchBar"
+                android:src="@drawable/ic_close_black_24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.3"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+    <TextView
+        android:id="@+id/lbl_no_task"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="16dp"
+        android:layout_centerInParent="true"
+        android:drawableTop="@drawable/ic_work_off"
+        android:gravity="center_horizontal"
+        android:text="@string/no_task"
+        android:textSize="22sp"
+        tools:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_tasks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="88dp"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_task" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_task"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:layout_marginTop="40dp"
-            android:textSize="50sp"
-            android:fontFamily="cursive"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/email_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="@android:color/white"
-            android:fontFamily="sans-serif-light"
-            android:hint="@string/email_hint"
-            android:imeOptions="flagNoExtractUi|actionNext"
-            android:importantForAutofill="no"
-            android:inputType="textEmailAddress"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"
-            android:textSize="17sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/sign_in_btn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.6"/>
-
-        <EditText
-            android:id="@+id/password_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="50dp"
-            android:backgroundTint="@android:color/white"
-            android:fontFamily="sans-serif-light"
-            android:hint="@string/password_hint"
-            android:importantForAutofill="no"
-            android:inputType="textPassword"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"
-            android:textSize="17sp"
-            android:imeOptions="flagNoExtractUi|actionNext"
-            app:layout_constraintVertical_bias="0.0"
-            app:layout_constraintBottom_toTopOf="@+id/sign_in_btn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/email_input" />
-
-        <Button
-            android:id="@+id/sign_in_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/button_white"
-            android:text="@string/sign_in_btn"
-            android:textColor="@color/colorPrimaryDark"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/add_task"
+        app:srcCompat="@drawable/ic_add" />
+</RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

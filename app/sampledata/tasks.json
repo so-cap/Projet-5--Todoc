@@ -25,27 +25,5 @@
       "taskName": "Ajouter un header sur le site",
       "projectName": "Projet Circus"
     }
-  ],
-
-  "data_employee": [
-    {"fullName": "Jenna Marbles",
-      "email": "jenna.marbles@email.com"
-    },
-    {
-      "fullName": "John Doe",
-      "email": "john.doe@email.com"
-    },
-    {
-      "fullName": "Emily Blunt",
-      "email": "emily.blunt@email.com"
-    },
-    {
-      "fullName": "Barack Obama",
-      "email": "barack.obama@email.com"
-    },
-    {
-      "fullName": "Mariah Carey",
-      "email": "mariah.carey@email.com"
-    }
   ]
 }

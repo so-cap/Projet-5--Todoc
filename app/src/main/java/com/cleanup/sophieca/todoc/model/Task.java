@@ -20,15 +20,10 @@ import static androidx.room.ForeignKey.CASCADE;
  * @author Sophie
  */
 
-// TODO : verifier l'utilité du onDelete = CASCADE
 @Entity(foreignKeys = {
         @ForeignKey(entity = Project.class,
                 parentColumns = "id",
-                childColumns = "projectId"),
-        @ForeignKey(onDelete = CASCADE,
-                entity = Employee.class,
-                parentColumns = "id",
-                childColumns = "employeeId")})
+                childColumns = "projectId")})
 public class Task {
     /**
      * The unique identifier of the task
@@ -43,9 +38,6 @@ public class Task {
     @ColumnInfo(index = true)
     private long projectId;
 
-    @ColumnInfo(index = true)
-    private int employeeId;
-
     /**
      * The name of the task
      */
@@ -57,10 +49,9 @@ public class Task {
      */
     private long creationTimestamp;
 
-    public Task(int id, long projectId, int employeeId, @NonNull String name, long creationTimestamp) {
+    public Task(int id, long projectId, @NonNull String name, long creationTimestamp) {
         this.id = id;
         this.projectId = projectId;
-        this.employeeId = employeeId;
         this.name = name;
         this.creationTimestamp = creationTimestamp;
     }
@@ -85,10 +76,6 @@ public class Task {
 
     public long getProjectId() {
         return projectId;
-    }
-
-    public int getEmployeeId() {
-        return employeeId;
     }
 
     /**

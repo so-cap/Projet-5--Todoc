@@ -7,9 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.cleanup.sophieca.todoc.injection.DI;
-import com.cleanup.sophieca.todoc.model.Employee;
-import com.cleanup.sophieca.todoc.ui.TasksListActivity;
+import com.cleanup.sophieca.todoc.ui.MainActivity;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,19 +35,15 @@ import static org.junit.Assert.assertThat;
  * @author Sophie Ca
  */
 @RunWith(AndroidJUnit4.class)
-public class TasksListActivityInstrumentedTest {
-    private TasksListActivity activity;
-    private Employee dummyEmployee = DI.getDemoEmployee();
+public class MainActivityInstrumentedTest {
+    private MainActivity activity;
 
     @Rule
-    public ActivityTestRule<TasksListActivity> rule = new ActivityTestRule<>(TasksListActivity.class);
+    public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);
 
     @Before
     public void setup() {
         activity = rule.getActivity();
-
-        TodocViewModel viewModel = (TodocViewModel) DI.getViewModel();
-        viewModel.createEmployee(dummyEmployee);
     }
 
     @Test

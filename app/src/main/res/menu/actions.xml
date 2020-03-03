@@ -5,6 +5,13 @@
     tools:context=".sophieca.ui.TasksListActivity">
 
     <item
+        android:id="@+id/search_bar_menu"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:title="@string/search_bar"
+        app:showAsAction="ifRoom">
+    </item>
+
+    <item
         android:id="@+id/action_filter"
         android:icon="@drawable/ic_filter_list"
         android:title="@string/label_action_filter"
@@ -28,19 +35,4 @@
                 app:showAsAction="never|withText" />
         </menu>
     </item>
-
-    <item
-        android:id="@+id/logout_menu"
-        android:icon="@drawable/ic_more_vert_white_24dp"
-        android:title="@string/logout_menu"
-        app:showAsAction="ifRoom">
-        <menu>
-            <item
-                android:id="@+id/logout_btn"
-                android:title="@string/logout_btn"
-                app:showAsAction="never|withText" />
-        </menu>
-
-    </item>
-
 </menu>
