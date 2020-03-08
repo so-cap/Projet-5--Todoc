@@ -4,6 +4,8 @@ apply plugin: 'jacoco-android'
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+File f = new File(keystoreProperties['storeFile'])
+URI storeFileURI = f.toURI()
 
 android {
     compileSdkVersion 29
@@ -11,7 +13,7 @@ android {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-            storeFile file('C:\\Users\\sophi\\Documents\\Openclassrooms\\Projet 5\\keystore-todoc1.jks')
+            storeFile file(storeFileURI)
             storePassword keystoreProperties['storePassword']
         }
     }
