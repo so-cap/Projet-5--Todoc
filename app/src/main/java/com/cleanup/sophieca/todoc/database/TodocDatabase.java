@@ -17,6 +17,8 @@ import com.cleanup.sophieca.todoc.model.Employee;
 import com.cleanup.sophieca.todoc.model.Project;
 import com.cleanup.sophieca.todoc.model.Task;
 
+import java.util.Date;
+
 /**
  * Created by SOPHIE on 21/02/2020.
  */
@@ -57,10 +59,12 @@ public abstract class TodocDatabase extends RoomDatabase {
     private static class PopulateDBAsyncTask extends AsyncTask<Void, Void, Void>{
         private ProjectDao projectDao;
         private EmployeeDao employeeDao;
+        private TaskDao taskDao;
 
         private PopulateDBAsyncTask(TodocDatabase db) {
             projectDao = db.projectDao();
             employeeDao = db.employeeDao();
+            taskDao = db.taskDao();
         }
 
         @Override
@@ -75,6 +79,12 @@ public abstract class TodocDatabase extends RoomDatabase {
             employee.setAdmin(true);
             employee.setFirstConnection(false);
             employeeDao.insert(employee);
+
+            taskDao.insert(new Task(0,1L, 1,"Nettoyer les vitres",new Date().getTime()));
+            taskDao.insert(new Task(0,2L,1,"Vider le lave vaiselle",new Date().getTime()));
+            taskDao.insert(new Task(0,2L,1,"Passer l'aspirateur",new Date().getTime()));
+            taskDao.insert(new Task(0,1L,2,"Arroser les plantes",new Date().getTime()));
+            taskDao.insert(new Task(0,3L,2,"Nettoyer les toilettes",new Date().getTime()));
             return null;
         }
     }

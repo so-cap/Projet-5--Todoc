@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        deleteDatabase("TodocDatabase.db");
+
         configureViewModel();
         DI.setViewModel(viewModel);
         ButterKnife.bind(this);

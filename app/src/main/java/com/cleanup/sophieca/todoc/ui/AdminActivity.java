@@ -122,6 +122,7 @@ public class AdminActivity extends AppCompatActivity implements EmployeesAdapter
         viewModel.getEmployees().observe(this, new Observer<List<Employee>>() {
             @Override
             public void onChanged(List<Employee> employees) {
+                employeesList.clear();
                 for (Employee employee : employees)
                     if (!employee.isAdmin())
                         employeesList.add(employee);
