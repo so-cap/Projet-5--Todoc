@@ -12,12 +12,15 @@ import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +46,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.cleanup.sophieca.todoc.ui.MainActivity.CURRENT_EMPLOYEE;
 import static com.cleanup.sophieca.todoc.ui.MainActivity.EMPLOYEE_ID_EXTRA;
@@ -113,6 +117,13 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
     private TextView lblNoTasks;
     @BindView(R.id.my_toolbar)
     Toolbar mainToolbar;
+
+    @BindView(R.id.search_bar_text)
+    EditText searchBarInput;
+
+    @BindView(R.id.search_bar)
+    ConstraintLayout searchBar;
+
     Context context;
     ProgressDialog progressDialog;
 
@@ -142,6 +153,7 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
         progressDialog = new ProgressDialog(this);
         DI.initProgressDialog(progressDialog);
 
+        initSearchBar();
         observeTasks();
         initProjects();
 
@@ -151,6 +163,45 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
                 showAddTaskDialog();
             }
         });
+    }
+
+    private void initSearchBar() {
+        searchBarInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filterList(s.toString());
+            }
+        });
+    }
+
+    private void filterList(String text) {
+        ArrayList<Task> filteredList = new ArrayList<>();
+
+        for (Task task : allTasks) {
+            if (task.getProject() != null)
+                if (task.getProject().getName().toLowerCase().contains(text.toLowerCase()) ||
+                        task.getProject().getName().toLowerCase().contains(text.toLowerCase())) {
+                    filteredList.add(task);
+                }
+        }
+        adapter.updateTasks(filteredList);
+    }
+
+    @OnClick
+    public void hideSearchBar(View view) {
+        searchBar.setVisibility(View.GONE);
+        searchBarInput.setText("");
+        updateTasks();
     }
 
     private void observeTasks() {
@@ -317,7 +368,12 @@ public class TasksListActivity extends AppCompatActivity implements TasksAdapter
             sortMethod = SortMethod.OLD_FIRST;
         } else if (id == R.id.filter_recent_first) {
             sortMethod = SortMethod.RECENT_FIRST;
-        } else if (id == R.id.logout_btn) {
+        } else if (id == R.id.search_bar_main) {
+            if (searchBar.getVisibility() == View.GONE)
+                searchBar.setVisibility(View.VISIBLE);
+            else
+                hideSearchBar(searchBar);
+        }else if (id == R.id.logout_btn) {
             backToHomePage();
         }
 

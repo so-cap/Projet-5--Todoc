@@ -41,4 +41,9 @@
     <string name="saved_password">"Mot de passe enregistré ! Connectez-vous "</string>
     <string name="search">Rechercher…</string>
     <string name="app_title_admin">Todoc - Administrateur</string>
+    <string name="search_project">Rechercher un projet…</string>
+    <string name="add_employee">Ajout d\'un nouveau compte</string>
+    <string name="save_employee">"Enregistrer le compte et envoyer le mot de passe par mail"</string>
+    <string name="default_password">Mot de passe par défaut</string>
+    <string name="account_saved">Compte enregistré !</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.cleanup.sophieca.todoc.ui;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,11 +10,15 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,11 +41,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by SOPHIE on 02/03/2020.
  */
-public class AdminActivity extends AppCompatActivity implements EmployeesAdapter.DeleteEmployeeListener {
+public class AdminActivity extends AppCompatActivity implements EmployeesAdapter.DeleteEmployeeListener, DialogInterface.OnDismissListener, DialogInterface.OnShowListener {
     private List<Employee> employeesList = new ArrayList<>();
     private EmployeesAdapter adapter = new EmployeesAdapter(employeesList, this);
     private TodocViewModel viewModel;
@@ -51,10 +57,19 @@ public class AdminActivity extends AppCompatActivity implements EmployeesAdapter
 
     @BindView(R.id.my_toolbar)
     Toolbar mainToolbar;
+
+    @BindView(R.id.search_bar_text)
+    EditText searchBarInput;
     @BindView(R.id.search_bar)
-    EditText searchBar;
+    ConstraintLayout searchBar;
+
     @BindView(R.id.fab_add_employee)
     FloatingActionButton addEmployee;
+
+    EditText lastNameInput;
+    EditText firstNameInput;
+    EditText emailInput;
+    EditText passwordInput;
 
 
     @Override
@@ -65,6 +80,7 @@ public class AdminActivity extends AppCompatActivity implements EmployeesAdapter
 
         configureViewModel();
         observeEmployees();
+        initSearchBar();
 
         progressDialog = new ProgressDialog(this);
         DI.initProgressDialog(progressDialog);
@@ -73,9 +89,65 @@ public class AdminActivity extends AppCompatActivity implements EmployeesAdapter
         listEmployees.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listEmployees.setAdapter(adapter);
 
+        findViewById(R.id.fab_add_employee).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAddEmployeeDialog();
+            }
+        });
+    }
 
+    private void showAddEmployeeDialog() {
+        AlertDialog newEmployeeDialog;
+        final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this, R.style.Dialog);
+        alertBuilder.setTitle(R.string.add_employee);
+        alertBuilder.setView(R.layout.dialog_add_employee);
+        alertBuilder.setPositiveButton(R.string.save_employee, null);
+        alertBuilder.setOnDismissListener(this);
 
-        searchBar.addTextChangedListener(new TextWatcher() {
+        newEmployeeDialog = alertBuilder.create();
+
+        // This instead of listener to positive button in order to avoid automatic dismiss
+        newEmployeeDialog.setOnShowListener(this);
+
+        newEmployeeDialog.show();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        lastNameInput.setText("");
+        firstNameInput.setText("");
+        emailInput.setText("");
+        passwordInput.setText("");
+    }
+
+    @Override
+    public void onShow(DialogInterface dialog) {
+        Button button =  ((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+        button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                onSaveEmployee(((AlertDialog)dialog));
+            }
+        });
+    }
+
+    private void onSaveEmployee(AlertDialog newEmployeeDialog) {
+        lastNameInput = newEmployeeDialog.findViewById(R.id.new_lastname);
+        firstNameInput = newEmployeeDialog.findViewById(R.id.new_firstname);
+        emailInput = newEmployeeDialog.findViewById(R.id.new_email);
+        passwordInput = newEmployeeDialog.findViewById(R.id.default_password);
+
+        viewModel.createEmployee(new Employee(0,firstNameInput.getText().toString(),
+                lastNameInput.getText().toString(),emailInput.getText().toString(), passwordInput.getText().toString()));
+        newEmployeeDialog.hide();
+
+        Toast.makeText(newEmployeeDialog.getContext(), R.string.account_saved, Toast.LENGTH_SHORT).show();
+    }
+
+    private void initSearchBar() {
+        searchBarInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -91,9 +163,7 @@ public class AdminActivity extends AppCompatActivity implements EmployeesAdapter
                 filterList(s.toString());
             }
         });
-
     }
-
 
     @Override
     public void onDeleteEmployee(int id) {
@@ -111,6 +181,13 @@ public class AdminActivity extends AppCompatActivity implements EmployeesAdapter
             }
         }
         adapter.updateList(filteredList);
+    }
+
+    @OnClick
+    public void hideSearchBar(View view) {
+        searchBar.setVisibility(View.GONE);
+        searchBarInput.setText("");
+        adapter.updateList(employeesList);
     }
 
     public void configureViewModel() {
@@ -150,13 +227,13 @@ public class AdminActivity extends AppCompatActivity implements EmployeesAdapter
             if (searchBar.getVisibility() == View.GONE)
                 searchBar.setVisibility(View.VISIBLE);
             else
-                searchBar.setVisibility(View.GONE);
+                hideSearchBar(searchBar);
         } else if (id == R.id.logout_btn_admin) {
             backToHomePage();
         }
 
         if (id == R.id.filter_alphabetical_admin || id == R.id.filter_alphabetical_inverted_admin
-                || id == R.id.logout_btn_admin || searchBar.getVisibility() == View.GONE)
+                || id == R.id.logout_btn_admin)
             adapter.updateList(employeesList);
 
         return super.onOptionsItemSelected(item);
@@ -175,5 +252,4 @@ public class AdminActivity extends AppCompatActivity implements EmployeesAdapter
             }
         }, 1000);
     }
-
 }

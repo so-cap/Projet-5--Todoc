@@ -4,6 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".sophieca.ui.TasksListActivity">
 
+
+    <item
+        android:id="@+id/search_bar_main"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:title="@string/logout_menu"
+        app:showAsAction="ifRoom">
+    </item>
+
     <item
         android:id="@+id/action_filter"
         android:icon="@drawable/ic_filter_list"

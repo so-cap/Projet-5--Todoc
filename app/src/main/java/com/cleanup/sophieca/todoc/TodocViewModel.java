@@ -43,7 +43,7 @@ public class TodocViewModel extends ViewModel {
         return employeeDataSource.getEmployees();
     }
 
-    void createEmployee(final Employee employee) {
+    public void createEmployee(final Employee employee) {
         executor.execute(new Runnable() {
             @Override
             public void run() {

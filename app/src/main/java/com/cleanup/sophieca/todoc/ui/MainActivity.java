@@ -50,8 +50,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        deleteDatabase("TodocDatabase.db");
-
         configureViewModel();
         DI.setViewModel(viewModel);
         ButterKnife.bind(this);
@@ -110,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (CURRENT_EMPLOYEE.isAdmin()){
             intent = new Intent(MainActivity.this, AdminActivity.class);
             startActivity(intent);
+            finish();
             Toast.makeText(context, context.getString(R.string.welcome) +
                     CURRENT_EMPLOYEE.getFirstName() + " ! ", Toast.LENGTH_SHORT).show();
         } else if (CURRENT_EMPLOYEE.isNew()) {
