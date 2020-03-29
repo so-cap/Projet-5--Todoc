@@ -17,11 +17,11 @@ https://play.google.com/store/apps/details?id=com.cleanup.sophieca.todoc
 Ci-dessous, les logins pour utiliser cette version:
 
   Login employés par défaut:
-    Compte 1 - email : sophie@email.com
-               mot de passe : mdp
-     
-    Compte 2 - email: john@email.com
-               mot de passe : mdp
+   Compte 1 - email : sophie@email.com
+              mot de passe : mdp
+    
+   Compte 2 - email: john@email.com
+              mot de passe : mdp
   
   Login Administrateur:
      email : admin@email.com
