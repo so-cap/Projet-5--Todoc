@@ -115,10 +115,10 @@ public class AdminActivity extends AppCompatActivity implements EmployeesAdapter
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        lastNameInput.setText("");
-        firstNameInput.setText("");
-        emailInput.setText("");
-        passwordInput.setText("");
+        lastNameInput = null;
+        firstNameInput = null;
+        emailInput = null;
+        passwordInput = null;
     }
 
     @Override
