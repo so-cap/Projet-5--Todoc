@@ -9,8 +9,10 @@ import java.util.Collections;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 /**
  * Unit tests for tasks
@@ -25,9 +27,12 @@ public class TaskUnitTest {
         final Task task3 = new Task(3, 3, "task 3", new Date().getTime());
         final Task task4 = new Task(4, 4,"task 4", new Date().getTime());
 
-        assertEquals("Projet Tartampion", task1.getProject().getName());
-        assertEquals("Projet Lucidia", task2.getProject().getName());
-        assertEquals("Projet Circus", task3.getProject().getName());
+        if (task1.getProject() != null && task2.getProject() != null && task3.getProject() != null) {
+            assertEquals("Projet Tartampion", task1.getProject().getName());
+            assertEquals("Projet Lucidia", task2.getProject().getName());
+            assertEquals("Projet Circus", task3.getProject().getName());
+        } else
+            fail();
         assertNull(task4.getProject());
     }
 
