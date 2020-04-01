@@ -125,8 +125,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         configureViewModel();
 
-        deleteDatabase("TodocDatabase.db");
-
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listTasks.setAdapter(adapter);
 
