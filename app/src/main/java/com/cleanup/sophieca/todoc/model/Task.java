@@ -29,7 +29,7 @@ public class Task {
      * The unique identifier of the task
      */
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private long id;
 
     /**
      * The unique identifier of the project associated to the task
@@ -49,7 +49,7 @@ public class Task {
      */
     private long creationTimestamp;
 
-    public Task(int id, long projectId, @NonNull String name, long creationTimestamp) {
+    public Task(long id, long projectId, @NonNull String name, long creationTimestamp) {
         this.id = id;
         this.projectId = projectId;
         this.name = name;
@@ -61,7 +61,7 @@ public class Task {
      *
      * @return the unique identifier of the task
      */
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -70,22 +70,12 @@ public class Task {
      *
      * @param id the unique idenifier of the task to set
      */
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
     public long getProjectId() {
         return projectId;
-    }
-
-    /**
-     * Returns the project associated to the task.
-     *
-     * @return the project associated to the task
-     */
-    @Nullable
-    public Project getProject() {
-        return Project.getProjectById(projectId);
     }
 
     /**

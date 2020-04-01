@@ -1,7 +1,9 @@
 package com.cleanup.sophieca.todoc;
 
+import com.cleanup.sophieca.todoc.model.Project;
 import com.cleanup.sophieca.todoc.model.Task;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -20,21 +22,6 @@ import static org.junit.Assert.fail;
  * @author Gaëtan HERFRAY
  */
 public class TaskUnitTest {
-    @Test
-    public void test_projects() {
-        final Task task1 = new Task(1, 1 ,"task 1", new Date().getTime());
-        final Task task2 = new Task(2, 2,"task 2", new Date().getTime());
-        final Task task3 = new Task(3, 3, "task 3", new Date().getTime());
-        final Task task4 = new Task(4, 4,"task 4", new Date().getTime());
-
-        if (task1.getProject() != null && task2.getProject() != null && task3.getProject() != null) {
-            assertEquals("Projet Tartampion", task1.getProject().getName());
-            assertEquals("Projet Lucidia", task2.getProject().getName());
-            assertEquals("Projet Circus", task3.getProject().getName());
-        } else
-            fail();
-        assertNull(task4.getProject());
-    }
 
     @Test
     public void test_az_comparator() {

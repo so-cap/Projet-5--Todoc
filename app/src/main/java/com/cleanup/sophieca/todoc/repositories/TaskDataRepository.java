@@ -22,7 +22,7 @@ public class TaskDataRepository {
         taskDao.insert(task);
     }
 
-    public void deleteTask(int id){
+    public void deleteTask(long id){
      taskDao.delete(id);
     }
 

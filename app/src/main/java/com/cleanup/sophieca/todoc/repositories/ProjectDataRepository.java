@@ -21,5 +21,4 @@ public class ProjectDataRepository {
     public LiveData<List<Project>> getAllProjects(){
         return projectDao.getAllProjects();
     }
-
 }

@@ -2,7 +2,10 @@ package com.cleanup.sophieca.todoc.injection;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.cleanup.sophieca.todoc.database.TodocDatabase;
+import com.cleanup.sophieca.todoc.model.Project;
 import com.cleanup.sophieca.todoc.repositories.ProjectDataRepository;
 import com.cleanup.sophieca.todoc.repositories.TaskDataRepository;
 import com.cleanup.sophieca.todoc.utils.ViewModelFactory;
@@ -33,4 +36,21 @@ public class Injection {
         Executor executor = provideExecutor();
         return new ViewModelFactory(projectDataSource, taskDataSource, executor);
     }
+
+
+    /**
+     * Returns all the projects of the application.
+     *
+     * @return all the projects of the application
+     */
+
+    @NonNull
+    public static Project[] getAllProjects() {
+        return new Project[]{
+                new Project(0, "Projet Tartampion", "#FFEADAD1"),
+                new Project(0, "Projet Lucidia", "#FFB4CDBA"),
+                new Project(0, "Projet Circus", "#FFA3CED2")
+        };
+    }
+
 }

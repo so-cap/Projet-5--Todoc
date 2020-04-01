@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.cleanup.sophieca.todoc.database.TodocDatabase;
+import com.cleanup.sophieca.todoc.injection.Injection;
 import com.cleanup.sophieca.todoc.model.Project;
 import com.cleanup.sophieca.todoc.model.Task;
 
@@ -59,9 +60,9 @@ public class DaoTests {
         List<Project> items = LiveDataTestUtil.getValue(database.projectDao().getAllProjects());
         assertEquals(0, items.size());
 
-        this.database.projectDao().insertProject(Project.getAllProjects()[0]);
-        this.database.projectDao().insertProject(Project.getAllProjects()[1]);
-        this.database.projectDao().insertProject(Project.getAllProjects()[2]);
+        this.database.projectDao().insertProject(Injection.getAllProjects()[0]);
+        this.database.projectDao().insertProject(Injection.getAllProjects()[1]);
+        this.database.projectDao().insertProject(Injection.getAllProjects()[2]);
 
         // TEST
         items = LiveDataTestUtil.getValue(database.projectDao().getAllProjects());
@@ -75,7 +76,7 @@ public class DaoTests {
     @Test
     public void insertAndGetTask() throws InterruptedException {
         // Add projects in database
-        for (Project project : Project.getAllProjects())
+        for (Project project : Injection.getAllProjects())
             database.projectDao().insertProject(project);
 
         database.taskDao().insert(TASK_1);
@@ -89,7 +90,7 @@ public class DaoTests {
     @Test
     public void deleteTask() throws InterruptedException {
         // BEFORE : Adding a projects and tasks;
-        for (Project project : Project.getAllProjects())
+        for (Project project : Injection.getAllProjects())
             database.projectDao().insertProject(project);
 
         database.taskDao().insert(TASK_1);

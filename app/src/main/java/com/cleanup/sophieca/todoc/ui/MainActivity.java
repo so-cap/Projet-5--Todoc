@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     /**
      * List of all projects available in the application
      */
-    private Project[] allProjects;
+    private List<Project> allProjects = new ArrayList<>();
 
     /**
      * List of all current tasks of the application
@@ -95,7 +95,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     // Suppress warning is safe because variable is initialized in onCreate
     @SuppressWarnings("NullableProblems")
     @NonNull
-    private RecyclerView listTasks;
+    @BindView(R.id.list_tasks)
+    RecyclerView listTasks;
 
     /**
      * The TextView displaying the empty state
@@ -103,7 +104,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     // Suppress warning is safe because variable is initialized in onCreate
     @SuppressWarnings("NullableProblems")
     @NonNull
-    private TextView lblNoTasks;
+    @BindView(R.id.lbl_no_task)
+    TextView lblNoTasks;
 
     @BindView(R.id.my_toolbar)
     Toolbar mainToolbar;
@@ -123,8 +125,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         configureViewModel();
 
-        listTasks = findViewById(R.id.list_tasks);
-        lblNoTasks = findViewById(R.id.lbl_no_task);
+        deleteDatabase("TodocDatabase.db");
 
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listTasks.setAdapter(adapter);
@@ -170,11 +171,19 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         ArrayList<Task> filteredList = new ArrayList<>();
 
         for (Task task : allTasks) {
-            if (task.getProject() != null)
-                if (task.getProject().getName().toLowerCase().contains(text.toLowerCase()) ||
-                        task.getProject().getName().toLowerCase().contains(text.toLowerCase())) {
+            if (task.getProjectId() != -1) {
+                Project taskProject = null;
+                for (int i = 0 ; i < allProjects.size(); i++){
+                    if (allProjects.get(i).getId() == task.getProjectId())
+                        taskProject = allProjects.get(i);
+                }
+
+                if (taskProject != null)
+                if (taskProject.getName().toLowerCase().contains(text.toLowerCase()) ||
+                        taskProject.getName().toLowerCase().contains(text.toLowerCase())) {
                     filteredList.add(task);
                 }
+            }
         }
         adapter.updateTasks(filteredList);
     }
@@ -187,13 +196,16 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 updateTasks();
             }
         });
+
+
     }
 
     private void initProjects() {
         viewModel.getAllProjects().observe(this, new Observer<List<Project>>() {
             @Override
-            public void onChanged(List<Project> pProjects) {
-                allProjects = pProjects.toArray(new Project[0]);
+            public void onChanged(List<Project> projects) {
+                allProjects = projects;
+                adapter.setProjects(allProjects);
             }
         });
     }
@@ -320,7 +332,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
 
     @Override
-    public void onDeleteTask(int id) {
+    public void onDeleteTask(long id) {
         viewModel.deleteTask(id);
     }
 

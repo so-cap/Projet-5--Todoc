@@ -52,7 +52,7 @@ public class TaskViewModel extends ViewModel {
         });
     }
 
-    public void deleteTask(final int taskId) {
+    public void deleteTask(final long taskId) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -60,5 +60,6 @@ public class TaskViewModel extends ViewModel {
             }
         });
     }
+
 
 }
