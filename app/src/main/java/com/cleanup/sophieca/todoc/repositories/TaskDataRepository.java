@@ -29,4 +29,21 @@ public class TaskDataRepository {
     public LiveData<List<Task>> getTasks(){
         return taskDao.getTasks();
     }
+
+    public LiveData<List<Task>> getTasksByAZ(){
+        return taskDao.getTasksByAZ();
+    }
+
+    public LiveData<List<Task>> getTasksByZA(){
+        return taskDao.getTasksByZA();
+    }
+
+    public LiveData<List<Task>> getTasksByMostRecent(){
+        return taskDao.getTasksByMostRecent();
+    }
+
+    public LiveData<List<Task>> getTasksByLessRecent(){
+        return taskDao.getTasksByLessRecent();
+    }
+
 }

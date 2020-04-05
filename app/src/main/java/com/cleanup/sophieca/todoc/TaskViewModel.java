@@ -43,6 +43,24 @@ public class TaskViewModel extends ViewModel {
         return taskDataSource.getTasks();
     }
 
+    public LiveData<List<Task>> getTasksByAZ(){
+        return taskDataSource.getTasksByAZ();
+    }
+
+    public LiveData<List<Task>> getTasksByZA(){
+        return taskDataSource.getTasksByZA();
+    }
+
+    public LiveData<List<Task>> getTasksByMostRecent(){
+        return taskDataSource.getTasksByMostRecent();
+    }
+
+    public LiveData<List<Task>> getTasksByLessRecent(){
+        return taskDataSource.getTasksByLessRecent();
+    }
+
+
+
     public void createTask(final Task task) {
         executor.execute(new Runnable() {
             @Override

@@ -187,15 +187,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     }
 
     private void observeTasks() {
-        viewModel.getTasks().observe(this, new Observer<List<Task>>() {
-            @Override
-            public void onChanged(final List<Task> tasks) {
-                allTasks = tasks;
-                updateTasks();
-            }
-        });
-
-
+        viewModel.getTasks().observe(this, this::updateTasks);
     }
 
     private void initProjects() {
@@ -346,23 +338,19 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         int id = item.getItemId();
 
         if (id == R.id.filter_alphabetical) {
-            sortMethod = SortMethod.ALPHABETICAL;
+            viewModel.getTasksByAZ().observe(this, this::updateTasks);
         } else if (id == R.id.filter_alphabetical_inverted) {
-            sortMethod = SortMethod.ALPHABETICAL_INVERTED;
+            viewModel.getTasksByZA().observe(this, this::updateTasks);
         } else if (id == R.id.filter_oldest_first) {
-            sortMethod = SortMethod.OLD_FIRST;
+            viewModel.getTasksByLessRecent().observe(this, this::updateTasks);
         } else if (id == R.id.filter_recent_first) {
-            sortMethod = SortMethod.RECENT_FIRST;
+            viewModel.getTasksByMostRecent().observe(this, this::updateTasks);
         } else if (id == R.id.search_bar_menu) {
             if (searchBar.getVisibility() == View.GONE)
                 searchBar.setVisibility(View.VISIBLE);
             else
                 hideSearchBar(searchBar);
         }
-
-        if (id == R.id.filter_alphabetical || id == R.id.filter_alphabetical_inverted
-                || id == R.id.filter_oldest_first || id == R.id.filter_recent_first)
-            updateTasks();
 
         return super.onOptionsItemSelected(item);
     }
@@ -371,20 +359,22 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     public void hideSearchBar(View view) {
         searchBar.setVisibility(View.GONE);
         searchBarInput.setText("");
-        updateTasks();
+        updateTasks(allTasks);
     }
 
 
     /**
      * Updates the list of tasks in the UI
      */
-    private void updateTasks() {
+    private void updateTasks(List<Task> taskList) {
+        allTasks = taskList;
         if (allTasks.isEmpty()) {
             lblNoTasks.setVisibility(View.VISIBLE);
             listTasks.setVisibility(View.GONE);
         } else {
             lblNoTasks.setVisibility(View.GONE);
             listTasks.setVisibility(View.VISIBLE);
+            /*
             switch (sortMethod) {
                 case ALPHABETICAL:
                     Collections.sort(allTasks, new Task.TaskAZComparator());
@@ -401,6 +391,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 case NONE:
                     break;
             }
+
+             */
         }
         adapter.updateTasks(allTasks);
     }

@@ -22,4 +22,17 @@ public interface TaskDao {
 
     @Query("SELECT * FROM Task")
     LiveData<List<Task>> getTasks();
+
+    @Query("SELECT * FROM Task ORDER BY name ASC")
+    LiveData<List<Task>> getTasksByAZ();
+
+    @Query("SELECT * FROM Task ORDER BY name DESC")
+    LiveData<List<Task>> getTasksByZA();
+
+    @Query("SELECT * FROM Task ORDER BY creationTimestamp DESC")
+    LiveData<List<Task>> getTasksByMostRecent();
+
+    @Query("SELECT * FROM Task ORDER BY creationTimestamp ASC")
+    LiveData<List<Task>> getTasksByLessRecent();
+
 }
