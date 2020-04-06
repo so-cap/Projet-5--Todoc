@@ -7,12 +7,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,23 +20,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.cleanup.sophieca.todoc.R;
 import com.cleanup.sophieca.todoc.TaskViewModel;
+import com.cleanup.sophieca.todoc.databinding.ActivityMainBinding;
 import com.cleanup.sophieca.todoc.injection.Injection;
 import com.cleanup.sophieca.todoc.model.Project;
 import com.cleanup.sophieca.todoc.model.Task;
+import com.cleanup.sophieca.todoc.model.TaskAndProject;
 import com.cleanup.sophieca.todoc.utils.ViewModelFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * <p>Home activity of the application which is displayed when the user opens the app.</p>
@@ -58,18 +51,12 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     /**
      * List of all current tasks of the application
      */
-    public List<Task> allTasks = new ArrayList<>();
+    public List<TaskAndProject> allTasks = new ArrayList<>();
 
     /**
      * The adapter which handles the list of tasks
      */
     private TasksAdapter adapter = new TasksAdapter(allTasks, this);
-
-    /**
-     * The sort method to be used to display tasks
-     */
-    @NonNull
-    private SortMethod sortMethod = SortMethod.NONE;
 
     /**
      * Dialog to create a new task
@@ -89,60 +76,40 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     @Nullable
     private Spinner dialogSpinner = null;
 
-    /**
-     * The RecyclerView which displays the list of tasks
-     */
-    // Suppress warning is safe because variable is initialized in onCreate
-    @SuppressWarnings("NullableProblems")
-    @NonNull
-    @BindView(R.id.list_tasks)
-    RecyclerView listTasks;
-
-    /**
-     * The TextView displaying the empty state
-     */
-    // Suppress warning is safe because variable is initialized in onCreate
-    @SuppressWarnings("NullableProblems")
-    @NonNull
-    @BindView(R.id.lbl_no_task)
-    TextView lblNoTasks;
-
-    @BindView(R.id.my_toolbar)
-    Toolbar mainToolbar;
-
-    @BindView(R.id.search_bar_text)
-    EditText searchBarInput;
-
-    @BindView(R.id.search_bar)
-    ConstraintLayout searchBar;
+    private ActivityMainBinding binding;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        setSupportActionBar(mainToolbar);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+
+        setSupportActionBar(binding.myToolbar);
 
         configureViewModel();
 
-        listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        listTasks.setAdapter(adapter);
+        binding.listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        binding.listTasks.setAdapter(adapter);
 
         observeTasks();
         initProjects();
 
         initSearchBar();
 
-        findViewById(R.id.fab_add_task).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showAddTaskDialog();
-            }
-        });
+        binding.fabAddTask.setOnClickListener(view1 -> showAddTaskDialog());
+
+        binding.searchBar.setOnClickListener(this::hideSearchBar);
+    }
+
+    public void hideSearchBar(View view) {
+        binding.searchBar.setVisibility(View.GONE);
+        binding.searchBarText.setText("");
+        updateTasks(allTasks);
     }
 
     private void initSearchBar() {
-        searchBarInput.addTextChangedListener(new TextWatcher() {
+        binding.searchBarText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -166,19 +133,13 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     }
 
     private void filterList(String text) {
-        ArrayList<Task> filteredList = new ArrayList<>();
+        ArrayList<TaskAndProject> filteredList = new ArrayList<>();
 
-        for (Task task : allTasks) {
-            if (task.getProjectId() != -1) {
-                Project taskProject = null;
-                for (int i = 0 ; i < allProjects.size(); i++){
-                    if (allProjects.get(i).getId() == task.getProjectId())
-                        taskProject = allProjects.get(i);
-                }
-
-                if (taskProject != null)
-                if (taskProject.getName().toLowerCase().contains(text.toLowerCase()) ||
-                        taskProject.getName().toLowerCase().contains(text.toLowerCase())) {
+        for (TaskAndProject task : allTasks) {
+            if (task.getProject() != null) {
+                if (task.getProject() != null)
+                if (task.getProject().getName().toLowerCase().contains(text.toLowerCase()) ||
+                        task.getProject().getName().toLowerCase().contains(text.toLowerCase())) {
                     filteredList.add(task);
                 }
             }
@@ -187,16 +148,13 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     }
 
     private void observeTasks() {
-        viewModel.getTasks().observe(this, this::updateTasks);
+        viewModel.getTasksWithProjects().observe(this, this::updateTasks);
     }
 
     private void initProjects() {
-        viewModel.getAllProjects().observe(this, new Observer<List<Project>>() {
-            @Override
-            public void onChanged(List<Project> projects) {
-                allProjects = projects;
-                adapter.setProjects(allProjects);
-            }
+        viewModel.getAllProjects().observe(this, projects -> {
+            allProjects = projects;
+            adapter.setProjects(allProjects);
         });
     }
 
@@ -259,13 +217,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     public void onShow(DialogInterface dialogInterface) {
         if (newTaskDialog != null) {
             Button button = newTaskDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            button.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View view) {
-                    onTaskDialogPositiveButtonClick(newTaskDialog);
-                }
-            });
+            button.setOnClickListener(view -> onTaskDialogPositiveButtonClick(newTaskDialog));
         }
     }
 
@@ -316,10 +268,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      */
     private void addTask(@NonNull Task task) {
         viewModel.createTask(task);
-        lblNoTasks.setVisibility(View.GONE);
-        listTasks.setVisibility(View.VISIBLE);
     }
-
 
     @Override
     public void onDeleteTask(long id) {
@@ -346,80 +295,27 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         } else if (id == R.id.filter_recent_first) {
             viewModel.getTasksByMostRecent().observe(this, this::updateTasks);
         } else if (id == R.id.search_bar_menu) {
-            if (searchBar.getVisibility() == View.GONE)
-                searchBar.setVisibility(View.VISIBLE);
+            if (binding.searchBar.getVisibility() == View.GONE)
+                binding.searchBar.setVisibility(View.VISIBLE);
             else
-                hideSearchBar(searchBar);
+                hideSearchBar(binding.searchBar);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick
-    public void hideSearchBar(View view) {
-        searchBar.setVisibility(View.GONE);
-        searchBarInput.setText("");
-        updateTasks(allTasks);
-    }
-
-
     /**
      * Updates the list of tasks in the UI
      */
-    private void updateTasks(List<Task> taskList) {
+    private void updateTasks(List<TaskAndProject> taskList) {
         allTasks = taskList;
         if (allTasks.isEmpty()) {
-            lblNoTasks.setVisibility(View.VISIBLE);
-            listTasks.setVisibility(View.GONE);
+            binding.lblNoTask.setVisibility(View.VISIBLE);
+            binding.listTasks.setVisibility(View.GONE);
         } else {
-            lblNoTasks.setVisibility(View.GONE);
-            listTasks.setVisibility(View.VISIBLE);
-            /*
-            switch (sortMethod) {
-                case ALPHABETICAL:
-                    Collections.sort(allTasks, new Task.TaskAZComparator());
-                    break;
-                case ALPHABETICAL_INVERTED:
-                    Collections.sort(allTasks, new Task.TaskZAComparator());
-                    break;
-                case RECENT_FIRST:
-                    Collections.sort(allTasks, new Task.TaskRecentComparator());
-                    break;
-                case OLD_FIRST:
-                    Collections.sort(allTasks, new Task.TaskOldComparator());
-                    break;
-                case NONE:
-                    break;
-            }
-
-             */
+            binding.lblNoTask.setVisibility(View.GONE);
+            binding.listTasks.setVisibility(View.VISIBLE);
         }
         adapter.updateTasks(allTasks);
-    }
-
-    /**
-     * List of all possible sort methods for task
-     */
-    private enum SortMethod {
-        /**
-         * Sort alphabetical by name
-         */
-        ALPHABETICAL,
-        /**
-         * Inverted sort alphabetical by name
-         */
-        ALPHABETICAL_INVERTED,
-        /**
-         * Lastly created first
-         */
-        RECENT_FIRST,
-        /**
-         * First created first
-         */
-        OLD_FIRST,
-        /**
-         * No sort
-         */
-        NONE
     }
 }

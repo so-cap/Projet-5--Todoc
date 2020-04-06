@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData;
 
 import com.cleanup.sophieca.todoc.database.dao.TaskDao;
 import com.cleanup.sophieca.todoc.model.Task;
+import com.cleanup.sophieca.todoc.model.TaskAndProject;
 
 import java.util.List;
 
@@ -30,19 +31,23 @@ public class TaskDataRepository {
         return taskDao.getTasks();
     }
 
-    public LiveData<List<Task>> getTasksByAZ(){
+    public LiveData<List<TaskAndProject>> getTasksWithProjects(){
+        return taskDao.getTasksWithProjects();
+    }
+
+    public LiveData<List<TaskAndProject>> getTasksByAZ(){
         return taskDao.getTasksByAZ();
     }
 
-    public LiveData<List<Task>> getTasksByZA(){
+    public LiveData<List<TaskAndProject>> getTasksByZA(){
         return taskDao.getTasksByZA();
     }
 
-    public LiveData<List<Task>> getTasksByMostRecent(){
+    public LiveData<List<TaskAndProject>> getTasksByMostRecent(){
         return taskDao.getTasksByMostRecent();
     }
 
-    public LiveData<List<Task>> getTasksByLessRecent(){
+    public LiveData<List<TaskAndProject>> getTasksByLessRecent(){
         return taskDao.getTasksByLessRecent();
     }
 

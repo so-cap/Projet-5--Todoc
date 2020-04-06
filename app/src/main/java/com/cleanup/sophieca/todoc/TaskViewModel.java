@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.cleanup.sophieca.todoc.model.Project;
 import com.cleanup.sophieca.todoc.model.Task;
+import com.cleanup.sophieca.todoc.model.TaskAndProject;
 import com.cleanup.sophieca.todoc.repositories.ProjectDataRepository;
 import com.cleanup.sophieca.todoc.repositories.TaskDataRepository;
 
@@ -43,19 +44,23 @@ public class TaskViewModel extends ViewModel {
         return taskDataSource.getTasks();
     }
 
-    public LiveData<List<Task>> getTasksByAZ(){
+    public LiveData<List<TaskAndProject>> getTasksWithProjects(){
+        return taskDataSource.getTasksWithProjects();
+    }
+
+    public LiveData<List<TaskAndProject>> getTasksByAZ(){
         return taskDataSource.getTasksByAZ();
     }
 
-    public LiveData<List<Task>> getTasksByZA(){
+    public LiveData<List<TaskAndProject>> getTasksByZA(){
         return taskDataSource.getTasksByZA();
     }
 
-    public LiveData<List<Task>> getTasksByMostRecent(){
+    public LiveData<List<TaskAndProject>> getTasksByMostRecent(){
         return taskDataSource.getTasksByMostRecent();
     }
 
-    public LiveData<List<Task>> getTasksByLessRecent(){
+    public LiveData<List<TaskAndProject>> getTasksByLessRecent(){
         return taskDataSource.getTasksByLessRecent();
     }
 

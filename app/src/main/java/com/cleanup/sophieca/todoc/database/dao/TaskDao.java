@@ -4,7 +4,10 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
+
 import com.cleanup.sophieca.todoc.model.Task;
+import com.cleanup.sophieca.todoc.model.TaskAndProject;
 
 import java.util.List;
 
@@ -23,16 +26,20 @@ public interface TaskDao {
     @Query("SELECT * FROM Task")
     LiveData<List<Task>> getTasks();
 
+    @Transaction
+    @Query("SELECT * FROM Task")
+    LiveData<List<TaskAndProject>> getTasksWithProjects();
+
     @Query("SELECT * FROM Task ORDER BY name ASC")
-    LiveData<List<Task>> getTasksByAZ();
+    LiveData<List<TaskAndProject>> getTasksByAZ();
 
     @Query("SELECT * FROM Task ORDER BY name DESC")
-    LiveData<List<Task>> getTasksByZA();
+    LiveData<List<TaskAndProject>> getTasksByZA();
 
     @Query("SELECT * FROM Task ORDER BY creationTimestamp DESC")
-    LiveData<List<Task>> getTasksByMostRecent();
+    LiveData<List<TaskAndProject>> getTasksByMostRecent();
 
     @Query("SELECT * FROM Task ORDER BY creationTimestamp ASC")
-    LiveData<List<Task>> getTasksByLessRecent();
+    LiveData<List<TaskAndProject>> getTasksByLessRecent();
 
 }
