@@ -81,31 +81,41 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setupBinding();
+        setSupportActionBar(binding.myToolbar);
+        configureViewModel();
+        configureRecyclerView();
+        observeTasks();
+        initProjects();
+        initSearchBar();
+        setupListener();
+    }
+
+    private void setupBinding() {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-
-        setSupportActionBar(binding.myToolbar);
-
-        configureViewModel();
-
-        binding.listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        binding.listTasks.setAdapter(adapter);
-
-        observeTasks();
-        initProjects();
-
-        initSearchBar();
-
-        binding.fabAddTask.setOnClickListener(view1 -> showAddTaskDialog());
-
-        binding.searchBar.setOnClickListener(this::hideSearchBar);
     }
 
-    public void hideSearchBar(View view) {
-        binding.searchBar.setVisibility(View.GONE);
-        binding.searchBarText.setText("");
-        updateTasks(allTasks);
+
+    private void configureViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
+        viewModel = new ViewModelProvider(this, viewModelFactory).get(TaskViewModel.class);
+    }
+
+    private void configureRecyclerView() {
+        binding.listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        binding.listTasks.setAdapter(adapter);
+    }
+
+    private void observeTasks() {
+        viewModel.getTasksWithProjects().observe(this, this::updateTasks);
+    }
+
+    private void initProjects() {
+        viewModel.getAllProjects().observe(this, projects -> {
+            allProjects = projects;
+        });
     }
 
     private void initSearchBar() {
@@ -122,40 +132,20 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
             @Override
             public void afterTextChanged(Editable s) {
-                filterList(s.toString());
+                viewModel.getFilteredTasks(s.toString()).observe(MainActivity.this, MainActivity.this::updateTasks);
             }
         });
     }
 
-    private void configureViewModel() {
-        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        viewModel = new ViewModelProvider(this, viewModelFactory).get(TaskViewModel.class);
+    private void setupListener() {
+        binding.fabAddTask.setOnClickListener(view1 -> showAddTaskDialog());
+        binding.searchBar.setOnClickListener(this::hideSearchBar);
     }
 
-    private void filterList(String text) {
-        ArrayList<TaskAndProject> filteredList = new ArrayList<>();
-
-        for (TaskAndProject task : allTasks) {
-            if (task.getProject() != null) {
-                if (task.getProject() != null)
-                if (task.getProject().getName().toLowerCase().contains(text.toLowerCase()) ||
-                        task.getProject().getName().toLowerCase().contains(text.toLowerCase())) {
-                    filteredList.add(task);
-                }
-            }
-        }
-        adapter.updateTasks(filteredList);
-    }
-
-    private void observeTasks() {
-        viewModel.getTasksWithProjects().observe(this, this::updateTasks);
-    }
-
-    private void initProjects() {
-        viewModel.getAllProjects().observe(this, projects -> {
-            allProjects = projects;
-            adapter.setProjects(allProjects);
-        });
+    public void hideSearchBar(View view) {
+        binding.searchBar.setVisibility(View.GONE);
+        binding.searchBarText.setText("");
+        updateTasks(allTasks);
     }
 
     /**

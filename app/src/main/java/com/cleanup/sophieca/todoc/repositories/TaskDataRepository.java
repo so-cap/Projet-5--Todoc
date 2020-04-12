@@ -51,4 +51,7 @@ public class TaskDataRepository {
         return taskDao.getTasksByLessRecent();
     }
 
+    public LiveData<List<TaskAndProject>> getFilteredTasks(String projectName) {
+        return taskDao.getFilteredTasks(projectName);
+    }
 }

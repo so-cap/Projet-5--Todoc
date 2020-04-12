@@ -30,16 +30,23 @@ public interface TaskDao {
     @Query("SELECT * FROM Task")
     LiveData<List<TaskAndProject>> getTasksWithProjects();
 
+    @Transaction
     @Query("SELECT * FROM Task ORDER BY name ASC")
     LiveData<List<TaskAndProject>> getTasksByAZ();
 
+    @Transaction
     @Query("SELECT * FROM Task ORDER BY name DESC")
     LiveData<List<TaskAndProject>> getTasksByZA();
 
+    @Transaction
     @Query("SELECT * FROM Task ORDER BY creationTimestamp DESC")
     LiveData<List<TaskAndProject>> getTasksByMostRecent();
 
+    @Transaction
     @Query("SELECT * FROM Task ORDER BY creationTimestamp ASC")
     LiveData<List<TaskAndProject>> getTasksByLessRecent();
 
+    @Transaction
+    @Query("SELECT Task.* FROM Task INNER JOIN Project ON Task.projectId = Project.id AND Project.name LIKE '%' || :projectName || '%'")
+    LiveData<List<TaskAndProject>> getFilteredTasks(String projectName);
 }

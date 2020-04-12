@@ -32,9 +32,6 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
     @NonNull
     private List<TaskAndProject> tasks;
 
-    private List<Project> projects;
-
-
     /**
      * The listener for when a task needs to be deleted
      */
@@ -59,10 +56,6 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
     void updateTasks(@NonNull final List<TaskAndProject> tasks) {
         this.tasks = tasks;
         notifyDataSetChanged();
-    }
-
-    void setProjects(List<Project> projects){
-        this.projects = projects;
     }
 
     @NonNull
@@ -99,7 +92,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
      *
      * @author Gaëtan HERFRAY
      */
-    class TaskViewHolder extends RecyclerView.ViewHolder {
+    static class TaskViewHolder extends RecyclerView.ViewHolder {
         /**
          * The circle icon showing the color of the project
          */

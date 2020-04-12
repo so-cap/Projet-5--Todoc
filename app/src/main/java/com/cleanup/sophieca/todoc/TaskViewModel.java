@@ -40,8 +40,8 @@ public class TaskViewModel extends ViewModel {
     // FOR TASK
     // -------------
 
-    public LiveData<List<Task>> getTasks() {
-        return taskDataSource.getTasks();
+    public LiveData<List<TaskAndProject>> getFilteredTasks(String projectName){
+        return taskDataSource.getFilteredTasks(projectName);
     }
 
     public LiveData<List<TaskAndProject>> getTasksWithProjects(){
