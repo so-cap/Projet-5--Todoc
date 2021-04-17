@@ -66,3 +66,4 @@ et appuyez sur ""Run 'NomDeLaMethode'".
 - Room
 - ViewModel
 - Glide
+- Travis CI
