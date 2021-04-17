@@ -57,3 +57,12 @@ et appuyez sur "Run 'NomDeLaClasse'".
 
 **Lancer les tests un par un:** Click droit sur le nom de la méthode @Test que vous désirez lancer,
 et appuyez sur ""Run 'NomDeLaMethode'". 
+
+
+## Librairies
+- AndroidX
+- Lifecycles
+- LiveData
+- Room
+- ViewModel
+- Glide for image loading
