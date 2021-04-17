@@ -65,4 +65,4 @@ et appuyez sur ""Run 'NomDeLaMethode'".
 - LiveData
 - Room
 - ViewModel
-- Glide for image loading
+- Glide
