@@ -29,23 +29,18 @@ Ci-dessous, les logins pour utiliser cette version:
 
 
 ## Prerequis 
-**Obtenir le projet:** 
-Clicker sur "Clone or Download" en haut à droite du projet sur Github, télécharger et extraire
-le fichier zip sur votre ordinateur.
-
-**Logiciel nécessaire:**
+**Software necessary:**
 Android Studio ([Comment installer Android Studio](https://developer.android.com/studio/install) )
 
-Assurez vous d'installer un émulateur ou de configurer votre smartphone Android en mode développeur afin de pouvoir 
-lancer l'application.
+Make sure you have an emulator installed or configured your Android smartphone to developer mode.
 
-## Lancer le projet
+## Launch project
+Open the project in Android Studio and click on "play" button or select "Run 'app' " in the "Run" menu.
 
-Dans Android Studio, ouvrez le projet que vous venez de télécharger
-et, si ce n'est pas fait automatiquement, cliquez sur "Sync project with Gradle Files" (menu "File")
-puis clickez sur "Build Project" (menu "Build"). 
-
-**Lancer l'application:** Cliquez sur le bouton "play" ou sélectionnez "Run 'app' " dans le menu "Run".
+## What I learned
+- Multithreading with Executor
+- MVVM design pattern
+- Using SQLite with Room
 
 ## Librairies
 - AndroidX
