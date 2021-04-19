@@ -30,7 +30,7 @@ Ci-dessous, les logins pour utiliser cette version:
 
 ## Prerequisite 
 **Software necessary:**
-Android Studio ([Comment installer Android Studio](https://developer.android.com/studio/install) )
+Android Studio ([How to install Android Studio](https://developer.android.com/studio/install) )
 
 Make sure you have an emulator installed or configured your Android smartphone to developer mode.
 
