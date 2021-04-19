@@ -28,7 +28,7 @@ Ci-dessous, les logins pour utiliser cette version:
      || mot de passe : mdp
 
 
-## Prerequis 
+## Prerequisite 
 **Software necessary:**
 Android Studio ([Comment installer Android Studio](https://developer.android.com/studio/install) )
 
