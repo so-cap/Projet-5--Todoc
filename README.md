@@ -41,6 +41,7 @@ Open the project in Android Studio and click on "play" button or select "Run 'ap
 - Multithreading with Executor
 - MVVM design pattern
 - Using SQLite with Room
+- Continuous Integration with Travis CI
 
 ## Librairies
 - AndroidX
