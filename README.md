@@ -11,7 +11,7 @@ Cette application permet :
 - De les trier par date de création
 - Et de les supprimer.
 
-Dans la branche "employee", se trouve une version de l'app proposant une connexion avec un compte employe.e 
+Dans la branche "employee", se trouve une version de l'app proposant une connexion avec un compte employé 
 ou un compte administrateur dans le cas où on voudrait gérer plus tard les données sur un serveur.
 Vous pouvez trouver cette version sur Google PlayStore :
 https://play.google.com/store/apps/details?id=com.cleanup.sophieca.todoc
