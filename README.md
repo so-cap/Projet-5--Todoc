@@ -2,7 +2,7 @@
 **P5 de la formation "Developpeur.euse d'Application Android" d'Openclassrooms**
 
 Todoc est une application de gestion de tâches. Mon objectif était de gérer la persistance de données 
-en utilisant une base données.
+en utilisant une base données locale.
 
 Cette application permet :
 - De créer des tâches selon 3 projets
