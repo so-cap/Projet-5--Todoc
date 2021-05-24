@@ -1,41 +1,21 @@
-# Projet  Todoc
-**P5 de la formation "Developpeur.euse d'Application Android" d'Openclassrooms**
+# Todoc
+**School project**
 
-Todoc est une application de gestion de tâches. Mon objectif était de gérer la persistance de données 
-en utilisant une base données locale.
+Todoc is a task managment app. My goal was to persist the data using a local database.
 
-Cette application permet :
-- De créer des tâches selon 3 projets
-- D'afficher la liste des tâches
-- De les filtrer par nom de projet 
-- De les trier par date de création
-- Et de les supprimer.
-
-Dans la branche "employee", se trouve une version de l'app proposant une connexion avec un compte employé 
-ou un compte administrateur dans le cas où on voudrait gérer plus tard les données sur un serveur.
-Vous pouvez trouver cette version sur Google PlayStore :
+In the "employee" branch you'll find a version of the app that offers to login with either an employee account or administrator account in case of using a cloud database in the future.
+You can also find this version on Google PlayStore :
 https://play.google.com/store/apps/details?id=com.cleanup.sophieca.todoc
-Ci-dessous, les logins pour utiliser cette version:
+To try this version you'll need these:
 
-  Login employés par défaut:
-   - Compte 1 - email : sophie@email.com || mot de passe : mdp
+  Employee login info:
+   - Account 1 - email : sophie@email.com || password : mdp
 
-   - Compte 2 - email: john@email.com
-                || mot de passe : mdp
+   - Account 2 - email: john@email.com || password : mdp
   
-  Login Administrateur:
-     email : admin@email.com
-     || mot de passe : mdp
+  Administrator Login info:
+     email : admin@email.com || mot de passe : mdp
 
-
-## Prerequisite 
-**Software necessary:**
-Android Studio ([How to install Android Studio](https://developer.android.com/studio/install) )
-
-Make sure you have an emulator installed or configured your Android smartphone to developer mode.
-
-## Launch project
-Open the project in Android Studio and click on "play" button or select "Run 'app' " in the "Run" menu.
 
 ## What I learned
 - Multithreading with Executor
@@ -43,7 +23,7 @@ Open the project in Android Studio and click on "play" button or select "Run 'ap
 - Using SQLite with Room
 - Continuous Integration with Travis CI
 
-## Librairies
+## Library
 - AndroidX
 - Lifecycles
 - LiveData
