@@ -26,6 +26,7 @@ https://play.google.com/store/apps/details?id=com.cleanup.sophieca.todoc
 - MVVM design pattern
 - Using SQLite with Room
 - Continuous Integration with Travis CI
+- Code coverage with JaCoCo
 
 ## Library
 - AndroidX
