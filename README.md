@@ -1,6 +1,8 @@
 # Todoc
 **School project**
 
+[![codecov](https://codecov.io/gh/sophicapri/Todoc/branch/master/graph/badge.svg?token=XkrHcnsMKv)](https://codecov.io/gh/sophicapri/Todoc)
+
 Todoc is a task managment app. My goal was to persist the data using a local database.
 
 In the "employee" branch you'll find a version of the app that offers to login with either an employee account or administrator account in case of using a cloud database in the future.
